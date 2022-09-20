@@ -1,6 +1,7 @@
 {% extends "chores/base.html" %}
 {% load chores_filters %}
 {% block content %}
+{% if chores %}
 <table>
     <tr>
         <th>Name</th>
@@ -9,17 +10,20 @@
         <th>Actions</th>
     </tr>
     {% for chore in chores %}
-        <tr>
-            <td>{{ chore.name }}</td>
-            <td>{{ chore.description }}</td>
-            <td>{{ chore.repeat_interval|format_duration }} seconds</td>
-            <td>
-                <a href="{% url "chores:edit_chore" chore.id %}">Edit</a>
-                <a href="{% url "chores:delete_chore" chore.id %}">Delete</a>
-            </td>
-        </tr>
+    <tr>
+        <td>{{ chore.name }}</td>
+        <td>{{ chore.description }}</td>
+        <td>{{ chore.repeat_interval|format_duration }} seconds</td>
+        <td>
+            <a href="{% url "chores:edit_chore" chore.id %}">Edit</a>
+            <a href="{% url "chores:delete_chore" chore.id %}">Delete</a>
+        </td>
+    </tr>
     {% endfor %}
 </table>
+{% else %}
+<p>No chores to display.</p>
+{% endif %}
 <p>
     <a href="{% url "chores:add_chore" %}">Add Chore</a>
 </p>

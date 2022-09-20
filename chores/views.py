@@ -6,7 +6,7 @@ from chores import forms, models
 
 
 def index(request: HttpRequest):
-    chores = get_list_or_404(models.Chore)
+    chores = models.Chore.objects.all().order_by("id")
     return render(request, "chores/index.html", dict(
         title="Chores",
         chores=chores,
