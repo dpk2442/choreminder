@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest
 from django.shortcuts import (get_list_or_404, get_object_or_404, redirect,
                               render, resolve_url)
@@ -5,6 +6,7 @@ from django.shortcuts import (get_list_or_404, get_object_or_404, redirect,
 from chores import forms, models
 
 
+@login_required
 def index(request: HttpRequest):
     chores = models.Chore.objects.all().order_by("id")
     return render(request, "chores/index.html", dict(
@@ -13,6 +15,7 @@ def index(request: HttpRequest):
     ))
 
 
+@login_required
 def add_chore(request: HttpRequest):
     if request.method == "POST":
         form = forms.ChoreForm(request.POST)
@@ -29,6 +32,7 @@ def add_chore(request: HttpRequest):
     ))
 
 
+@login_required
 def edit_chore(request: HttpRequest, chore_id: int):
     chore = get_object_or_404(models.Chore, pk=chore_id)
     if request.method == "POST":
@@ -46,6 +50,7 @@ def edit_chore(request: HttpRequest, chore_id: int):
     ))
 
 
+@login_required
 def delete_chore(request: HttpRequest, chore_id: int):
     chore = get_object_or_404(models.Chore, pk=chore_id)
     if request.method == "POST":

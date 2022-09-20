@@ -2,6 +2,7 @@ import datetime
 import random
 import string
 
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
@@ -17,7 +18,18 @@ def create_chore_in_db() -> int:
         name=create_chore_name(), description="Test Description", repeat_interval=datetime.timedelta(days=1))
 
 
-class ChoreIndexViewTests(TestCase):
+class AuthenticatedTest(TestCase):
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.user, _ = User.objects.get_or_create(username="test")
+        self.client.force_login(self.user)
+
+
+class ChoreIndexViewTests(AuthenticatedTest):
 
     def test_no_chores(self):
         response = self.client.get(reverse("chores:index"))
@@ -33,7 +45,23 @@ class ChoreIndexViewTests(TestCase):
         self.assertQuerysetEqual(response.context["chores"], [chore1, chore2])
 
 
-class ChoreAddViewTests(TestCase):
+class LoginTest(TestCase):
+
+    def test_redirects_if_not_logged_in(self):
+        response = self.client.get(reverse("chores:index"))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.headers["Location"], "{}?next={}".format(
+            reverse("login"), reverse("chores:index")))
+
+    def test_shows_logout_if_logged_in(self):
+        user, _ = User.objects.get_or_create(username="test")
+        self.client.force_login(user)
+        response = self.client.get(reverse("chores:index"))
+        self.assertContains(
+            response, "<a href=\"{}\">Logout</a>".format(reverse("logout")))
+
+
+class ChoreAddViewTests(AuthenticatedTest):
 
     def test_get(self):
         response = self.client.get(reverse("chores:add_chore"))
@@ -66,7 +94,7 @@ class ChoreAddViewTests(TestCase):
             models.Chore.objects.filter(name=chore_name), [])
 
 
-class ChoreEditViewTests(TestCase):
+class ChoreEditViewTests(AuthenticatedTest):
 
     def test_get(self):
         chore = create_chore_in_db()
@@ -108,7 +136,7 @@ class ChoreEditViewTests(TestCase):
         self.assertNotEqual(chore.description, "edited description")
 
 
-class ChoreDeleteViewTests(TestCase):
+class ChoreDeleteViewTests(AuthenticatedTest):
 
     def test_get(self):
         chore = create_chore_in_db()
