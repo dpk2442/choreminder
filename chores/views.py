@@ -8,7 +8,7 @@ from chores import forms, models
 
 @login_required
 def index(request: HttpRequest):
-    chores = models.Chore.objects.all().order_by("id")
+    chores = models.Chore.objects.filter(user=request.user).order_by("id")
     return render(request, "chores/index.html", dict(
         title="Chores",
         chores=chores,
@@ -20,7 +20,9 @@ def add_chore(request: HttpRequest):
     if request.method == "POST":
         form = forms.ChoreForm(request.POST)
         if form.is_valid():
-            form.save()
+            chore = form.save(commit=False)
+            chore.user = request.user
+            chore.save()
             return redirect("chores:index")
     else:
         form = forms.ChoreForm()
@@ -34,7 +36,7 @@ def add_chore(request: HttpRequest):
 
 @login_required
 def edit_chore(request: HttpRequest, chore_id: int):
-    chore = get_object_or_404(models.Chore, pk=chore_id)
+    chore = get_object_or_404(models.Chore, pk=chore_id, user=request.user)
     if request.method == "POST":
         form = forms.ChoreForm(request.POST, instance=chore)
         if form.is_valid():
@@ -52,7 +54,7 @@ def edit_chore(request: HttpRequest, chore_id: int):
 
 @login_required
 def delete_chore(request: HttpRequest, chore_id: int):
-    chore = get_object_or_404(models.Chore, pk=chore_id)
+    chore = get_object_or_404(models.Chore, pk=chore_id, user=request.user)
     if request.method == "POST":
         chore.delete()
         return redirect("chores:index")
