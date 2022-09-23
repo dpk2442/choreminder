@@ -9,4 +9,5 @@ urlpatterns = [
     path("chores/<int:chore_id>/edit", views.edit_chore, name="edit_chore"),
     path("chores/<int:chore_id>/delete",
          views.delete_chore, name="delete_chore"),
+    path("chores/<int:chore_id>/logs/add", views.log_chore, name="log_chore"),
 ]

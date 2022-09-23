@@ -7,6 +7,7 @@
         <th>Name</th>
         <th>Description</th>
         <th>Repeat Interval</th>
+        <th>Last done</th>
         <th>Actions</th>
     </tr>
     {% for chore in chores %}
@@ -14,7 +15,12 @@
         <td>{{ chore.name }}</td>
         <td>{{ chore.description }}</td>
         <td>{{ chore.repeat_interval|format_duration }} seconds</td>
-        <td>
+        <td>{{ chore.latest_log.timestamp }}</td>
+        <td style="text-align: center">
+            <form action="{% url "chores:log_chore" chore.id %}" method="POST">
+                {% csrf_token %}
+                <input type="submit" value="Mark Done">
+            </form>
             <a href="{% url "chores:edit_chore" chore.id %}">Edit</a>
             <a href="{% url "chores:delete_chore" chore.id %}">Delete</a>
         </td>

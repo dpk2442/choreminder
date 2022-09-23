@@ -1,7 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest
-from django.shortcuts import (get_list_or_404, get_object_or_404, redirect,
-                              render, resolve_url)
+from django.shortcuts import get_object_or_404, redirect, render, resolve_url
+from django.utils import timezone
+from django.views.decorators.http import require_POST
 
 from chores import forms, models
 
@@ -63,3 +64,12 @@ def delete_chore(request: HttpRequest, chore_id: int):
         title="Delete Chore",
         chore=chore,
     ))
+
+
+@login_required
+@require_POST
+def log_chore(request: HttpRequest, chore_id: int):
+    chore = get_object_or_404(models.Chore, pk=chore_id, user=request.user)
+    models.Log.objects.create(timestamp=timezone.now(),
+                              chore=chore, user=request.user)
+    return redirect("chores:index")

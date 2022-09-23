@@ -2,9 +2,12 @@ import datetime
 import random
 import string
 
+from django.conf import settings
 from django.contrib.auth.models import User
+from django.template import defaultfilters
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 
 from chores import forms, models
 
@@ -13,16 +16,43 @@ def create_chore_name() -> str:
     return "".join(random.choices(string.ascii_lowercase, k=20))
 
 
+class ChoreModelTest(TestCase):
+
+    def test_latest_chore(self):
+        user, _ = User.objects.get_or_create(username="test")
+        chore = models.Chore.objects.create(
+            name=create_chore_name(),
+            description="Test Description",
+            repeat_interval=datetime.timedelta(days=1),
+            user=user)
+
+        self.assertIsNone(chore.latest_log())
+
+        now = timezone.now()
+        log1 = models.Log.objects.create(
+            timestamp=now-datetime.timedelta(days=1), chore=chore, user=user)
+        log2 = models.Log.objects.create(
+            timestamp=now+datetime.timedelta(days=1), chore=chore, user=user)
+
+        self.assertEqual(chore.latest_log(), log2)
+
+
 class AuthenticatedTest(TestCase):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
-    def create_chore_in_db(self) -> int:
+    def create_chore_in_db(self) -> models.Chore:
         return models.Chore.objects.create(
             name=create_chore_name(),
             description="Test Description",
             repeat_interval=datetime.timedelta(days=1),
+            user=self.user)
+
+    def create_log_in_db(self, chore: models.Chore) -> models.Log:
+        return models.Log.objects.create(
+            timestamp=timezone.now(),
+            chore=chore,
             user=self.user)
 
     def setUp(self) -> None:
@@ -51,6 +81,13 @@ class ChoreIndexViewTests(AuthenticatedTest):
         response = self.client.get(reverse("chores:index"))
         self.assertContains(response, "No chores to display.")
         self.assertQuerysetEqual(response.context["chores"], [])
+
+    def test_shows_latest_log(self):
+        chore = self.create_chore_in_db()
+        log = self.create_log_in_db(chore)
+        response = self.client.get(reverse("chores:index"))
+        self.assertContains(response, defaultfilters.date(
+            timezone.localtime(log.timestamp), settings.DATETIME_FORMAT))
 
 
 class LoginTest(TestCase):
@@ -184,3 +221,17 @@ class ChoreDeleteViewTests(AuthenticatedTest):
         response = self.client.post(
             reverse("chores:delete_chore", args=(chore.id,)))
         self.assertEqual(response.status_code, 404)
+
+
+class ChoreLogViewTests(AuthenticatedTest):
+
+    def test_unknown_chore(self):
+        response = self.client.post(reverse("chores:log_chore", args=(1,)))
+        self.assertEqual(response.status_code, 404)
+
+    def test_success(self):
+        chore = self.create_chore_in_db()
+        response = self.client.post(
+            reverse("chores:log_chore", args=(chore.id,)))
+        self.assertRedirects(response, reverse("chores:index"))
+        self.assertIsNotNone(chore.latest_log())
