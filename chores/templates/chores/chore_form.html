@@ -2,7 +2,41 @@
 {% block content %}
     <form action="{{ url }}" method="post">
         {% csrf_token %}
-        {{ form.as_p }}
+        <fieldset>
+            {{ form.name.label_tag }}
+            {{ form.name }}
+            {{ form.name.errors }}
+        </fieldset>
+
+        <fieldset>
+            {{ form.description.label_tag }}
+            {{ form.description }}
+            {{ form.description.errors }}
+        </fieldset>
+
+
+        <fieldset>
+            {{ form.due_duration.label_tag }}
+            <p>{{ form.due_duration.help_text | safe }}</p>
+            <p>
+                This field should be formatted as
+                <code>&lt;days&gt; &lt;hours&gt;:&lt;minutes&gt;</code>.
+            </p>
+            {{ form.due_duration }}
+            {{ form.due_duration.errors }}
+        </fieldset>
+
+        <fieldset>
+            {{ form.overdue_duration.label_tag }}
+            <p>{{ form.overdue_duration.help_text | safe }}</p>
+            <p>
+                This field should be formatted as
+                <code>&lt;days&gt; &lt;hours&gt;:&lt;minutes&gt;</code>.
+            </p>
+            {{ form.overdue_duration }}
+            {{ form.overdue_duration.errors }}
+        </fieldset>
+
         <p><input type="submit" value="Save"></p>
     </form>
 {% endblock %}
