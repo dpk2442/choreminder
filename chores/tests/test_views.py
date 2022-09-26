@@ -65,6 +65,14 @@ class ChoreIndexViewTests(AuthenticatedTest):
         self.assertContains(response, defaultfilters.date(
             timezone.localtime(log.timestamp), settings.DATETIME_FORMAT))
 
+    def test_shows_next_due_and_status(self):
+        chore = self.create_chore_in_db()
+        log = self.create_log_in_db(chore)
+        response = self.client.get(reverse("chores:index"))
+        self.assertContains(response, "Completed")
+        self.assertContains(response, defaultfilters.date(timezone.localtime(
+            log.timestamp + datetime.timedelta(days=1)), settings.DATETIME_FORMAT))
+
 
 class LoginTest(TestCase):
 

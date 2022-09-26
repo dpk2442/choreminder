@@ -6,16 +6,18 @@
     <tr>
         <th>Name</th>
         <th>Description</th>
-        <th>Due Duration</th>
         <th>Last done</th>
+        <th>Next due</th>
+        <th>Status</th>
         <th>Actions</th>
     </tr>
     {% for chore in chores %}
     <tr>
         <td>{{ chore.name }}</td>
         <td>{{ chore.description }}</td>
-        <td>{{ chore.due_duration|format_duration }} seconds</td>
         <td>{{ chore.latest_log.timestamp }}</td>
+        <td>{{ chore.next_due | default:"" }}</td>
+        <td>{{ chore.display_status }}</td>
         <td style="text-align: center">
             <form action="{% url "chores:log_chore" chore.id %}" method="POST">
                 {% csrf_token %}
