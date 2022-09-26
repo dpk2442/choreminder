@@ -6,4 +6,4 @@ from chores import models
 class ChoreForm(forms.ModelForm):
     class Meta:
         model = models.Chore
-        fields = ["name", "description", "repeat_interval"]
+        fields = ["name", "description", "due_duration", "overdue_duration"]

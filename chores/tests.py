@@ -23,7 +23,8 @@ class ChoreModelTest(TestCase):
         chore = models.Chore.objects.create(
             name=create_chore_name(),
             description="Test Description",
-            repeat_interval=datetime.timedelta(days=1),
+            due_duration=datetime.timedelta(days=1),
+            overdue_duration=datetime.timedelta(),
             user=user)
 
         self.assertIsNone(chore.latest_log())
@@ -46,7 +47,8 @@ class AuthenticatedTest(TestCase):
         return models.Chore.objects.create(
             name=create_chore_name(),
             description="Test Description",
-            repeat_interval=datetime.timedelta(days=1),
+            due_duration=datetime.timedelta(days=1),
+            overdue_duration=datetime.timedelta(),
             user=self.user)
 
     def create_log_in_db(self, chore: models.Chore) -> models.Log:
@@ -77,6 +79,7 @@ class ChoreIndexViewTests(AuthenticatedTest):
         self.assertContains(response, chore2.name)
         self.assertQuerysetEqual(response.context["chores"], [chore1, chore2])
 
+        # test user 2 cannot list
         self.client.force_login(self.user2)
         response = self.client.get(reverse("chores:index"))
         self.assertContains(response, "No chores to display.")
@@ -119,15 +122,16 @@ class ChoreAddViewTests(AuthenticatedTest):
         response = self.client.post(reverse("chores:add_chore"), dict(
             name=chore_name,
             description="description",
-            repeat_interval="1 day",
+            due_duration="1 day",
+            overdue_duration="0",
         ))
         self.assertRedirects(response, reverse("chores:index"))
 
-        # test user 2 cannot list
-        chore = models.Chore.objects.get(name=chore_name)
+        chore: models.Chore = models.Chore.objects.get(name=chore_name)
         self.assertEqual(chore.name, chore_name)
         self.assertEqual(chore.description, "description")
-        self.assertEqual(chore.repeat_interval, datetime.timedelta(days=1))
+        self.assertEqual(chore.due_duration, datetime.timedelta(days=1))
+        self.assertEqual(chore.overdue_duration, datetime.timedelta())
 
     def test_post_invalid(self):
         chore_name = create_chore_name()
@@ -135,7 +139,7 @@ class ChoreAddViewTests(AuthenticatedTest):
             name=chore_name,
         ))
 
-        self.assertContains(response, "This field is required.", 2)
+        self.assertContains(response, "This field is required.", 3)
         self.assertQuerysetEqual(
             models.Chore.objects.filter(name=chore_name), [])
 
@@ -162,21 +166,23 @@ class ChoreEditViewTests(AuthenticatedTest):
         response = self.client.post(reverse("chores:edit_chore", args=(chore.id,)), dict(
             name=chore.name,
             description="edited description",
-            repeat_interval="1 day",
+            due_duration="1 day",
+            overdue_duration="0",
         ))
         self.assertRedirects(response, reverse("chores:index"))
 
-        chore = models.Chore.objects.get(pk=chore.id)
+        chore: models.Chore = models.Chore.objects.get(pk=chore.id)
         self.assertEqual(chore.name, chore.name)
         self.assertEqual(chore.description, "edited description")
-        self.assertEqual(chore.repeat_interval, datetime.timedelta(days=1))
+        self.assertEqual(chore.due_duration, datetime.timedelta(days=1))
+        self.assertEqual(chore.overdue_duration, datetime.timedelta())
 
         # test user 2 cannot update
         self.client.force_login(self.user2)
         response = self.client.post(reverse("chores:edit_chore", args=(chore.id,)), dict(
             name=chore.name,
             description="updated by another user",
-            repeat_interval="1 day",
+            due_duration="1 day",
         ))
         self.assertEqual(response.status_code, 404)
         chore = models.Chore.objects.get(pk=chore.id)
@@ -188,7 +194,7 @@ class ChoreEditViewTests(AuthenticatedTest):
             name=chore.name,
         ))
 
-        self.assertContains(response, "This field is required.", 2)
+        self.assertContains(response, "This field is required.", 3)
         chore = models.Chore.objects.get(pk=chore.id)
         self.assertNotEqual(chore.description, "edited description")
 

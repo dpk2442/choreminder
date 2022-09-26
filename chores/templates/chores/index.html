@@ -6,7 +6,7 @@
     <tr>
         <th>Name</th>
         <th>Description</th>
-        <th>Repeat Interval</th>
+        <th>Due Duration</th>
         <th>Last done</th>
         <th>Actions</th>
     </tr>
@@ -14,7 +14,7 @@
     <tr>
         <td>{{ chore.name }}</td>
         <td>{{ chore.description }}</td>
-        <td>{{ chore.repeat_interval|format_duration }} seconds</td>
+        <td>{{ chore.due_duration|format_duration }} seconds</td>
         <td>{{ chore.latest_log.timestamp }}</td>
         <td style="text-align: center">
             <form action="{% url "chores:log_chore" chore.id %}" method="POST">
