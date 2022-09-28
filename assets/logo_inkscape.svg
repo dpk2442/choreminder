@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="48"
+   height="48"
+   viewBox="0 0 48 48"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   sodipodi:docname="logo_inkscape.svg"
+   inkscape:export-filename="logo.svg"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="px"
+     showgrid="false"
+     inkscape:zoom="18.567357"
+     inkscape:cx="22.45877"
+     inkscape:cy="23.482071"
+     inkscape:window-width="1920"
+     inkscape:window-height="1184"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <ellipse
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-opacity:1;stroke-dasharray:none"
+       id="path790"
+       cx="24.000002"
+       cy="26"
+       rx="19.512392"
+       ry="19.51239"
+       inkscape:label="body" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.98744;stroke-dasharray:none;stroke-opacity:1"
+       d="M 9.6376769,39.204018 3.3348964,45.502471"
+       id="path954"
+       inkscape:label="left leg" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.98744;stroke-dasharray:none;stroke-opacity:1"
+       d="m 38.348993,39.204233 6.302781,6.298453"
+       id="path954-7"
+       inkscape:label="right leg" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
+       d="m 4.3218608,14.067654 c 0,0 -3.8187001,-4.5801036 1.5055857,-9.0957803 5.3242865,-4.51567209 9.2190355,0.096754 9.2190355,0.096754 z"
+       id="path1139"
+       sodipodi:nodetypes="czcc"
+       inkscape:label="left bell" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:1;stroke-dasharray:none;stroke-opacity:1"
+       d="m 43.678228,14.067654 c 0,0 3.8187,-4.5801036 -1.505586,-9.0957803 -5.324286,-4.51567208 -9.219035,0.096754 -9.219035,0.096754 z"
+       id="path1139-4"
+       sodipodi:nodetypes="czcc"
+       inkscape:label="right bell" />
+    <g
+       id="g1397"
+       inkscape:label="checklist item #3"
+       transform="translate(-1,17)"
+       style="display:inline">
+      <rect
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.43207;stroke-dasharray:none;stroke-opacity:1"
+         id="rect1240-1"
+         width="20"
+         height="2"
+         x="17"
+         y="15"
+         inkscape:label="item" />
+      <rect
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.452863;stroke-dasharray:none;stroke-opacity:1"
+         id="rect1240"
+         width="2"
+         height="2"
+         x="13"
+         y="15"
+         inkscape:label="checkbox" />
+    </g>
+    <g
+       id="g1787"
+       inkscape:label="checklist item #2"
+       transform="translate(-1,11)"
+       style="display:inline">
+      <rect
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.43207;stroke-dasharray:none;stroke-opacity:1"
+         id="rect1783"
+         width="20"
+         height="2"
+         x="17"
+         y="15"
+         inkscape:label="item" />
+      <rect
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.452863;stroke-dasharray:none;stroke-opacity:1"
+         id="rect1785"
+         width="2"
+         height="2"
+         x="13"
+         y="15"
+         inkscape:label="checkbox" />
+    </g>
+    <g
+       id="g1781"
+       inkscape:label="checklist item #1"
+       transform="translate(-1,5)"
+       style="display:inline">
+      <rect
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.43207;stroke-dasharray:none;stroke-opacity:1"
+         id="rect1777"
+         width="20"
+         height="2"
+         x="17"
+         y="15"
+         inkscape:label="item" />
+      <rect
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.452863;stroke-dasharray:none;stroke-opacity:1"
+         id="rect1779"
+         width="2"
+         height="2"
+         x="13"
+         y="15"
+         inkscape:label="checkbox" />
+    </g>
+  </g>
+</svg>
