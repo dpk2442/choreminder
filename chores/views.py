@@ -4,12 +4,12 @@ from django.shortcuts import get_object_or_404, redirect, render, resolve_url
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
-from chores import forms, models
+from chores import forms, models, queries
 
 
 @login_required
 def index(request: HttpRequest):
-    chores = models.Chore.objects.filter(user=request.user).order_by("id")
+    chores = queries.query_chores(request.user)
     return render(request, "chores/index.html", dict(
         title="Chores",
         chores=chores,
