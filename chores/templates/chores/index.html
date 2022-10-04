@@ -17,7 +17,7 @@
         <td>{{ chore.description }}</td>
         <td>{{ chore.latest_log.timestamp }}</td>
         <td>{{ chore.next_due | default:"" }}</td>
-        <td>{{ chore.display_status }}</td>
+        <td>{{ chore.status.state | format_status_state }}</td>
         <td style="text-align: center">
             <form action="{% url "chores:log_chore" chore.id %}" method="POST">
                 {% csrf_token %}
