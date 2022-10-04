@@ -30,7 +30,7 @@ def compute_status(current_time: datetime.datetime,
             overdue_time = next_due + overdue_duration
             if current_time < overdue_time:
                 return ChoreStatus("due", "overdue", calculate_percentage(
-                    1 - ((overdue_time - current_time) / overdue_duration)))
+                    (current_time - next_due) / overdue_duration))
             else:
                 return ChoreStatus("overdue", None, 0)
 
