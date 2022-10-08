@@ -1,7 +1,6 @@
 import datetime
 from datetime import timedelta as td
 
-from django.contrib.auth.models import User
 from django.test import TestCase
 from django.utils import timezone
 
@@ -92,3 +91,23 @@ class ChoreModelViewTest(TestCase):
         create_log(now, chore, user)
         self.assertEqual(chore_view.next_due(), now +
                          datetime.timedelta(days=1))
+
+    def test_weight(self):
+        user = get_user()
+        chore = create_chore(user)
+        chore_view = model_views.Chore(chore)
+
+        chore_view._status = model_views.ChoreStatus("completed", None, 10)
+        self.assertEqual(chore_view.weight, 10)
+
+        chore_view._status = model_views.ChoreStatus("due", None, 10)
+        self.assertEqual(chore_view.weight, 110)
+
+        chore_view._status = model_views.ChoreStatus("overdue", None, 10)
+        self.assertEqual(chore_view.weight, 210)
+
+        with self.assertRaises(ValueError) as cm:
+            chore_view._status = model_views.ChoreStatus("other", None, 10)
+            chore_view.weight
+
+        self.assertEqual(str(cm.exception), "State value is unexpected")

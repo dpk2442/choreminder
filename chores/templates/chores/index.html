@@ -9,6 +9,7 @@
         <th>Last done</th>
         <th>Next due</th>
         <th>Status</th>
+        <th>Weight</th>
         <th>Actions</th>
     </tr>
     {% for chore in chores %}
@@ -18,6 +19,7 @@
         <td>{{ chore.latest_log.timestamp }}</td>
         <td>{{ chore.next_due | default:"" }}</td>
         <td>{{ chore.status.state | format_status_state }}</td>
+        <td>{{ chore.weight }}</td>
         <td style="text-align: center">
             <form action="{% url "chores:log_chore" chore.id %}" method="POST">
                 {% csrf_token %}

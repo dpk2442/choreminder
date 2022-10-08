@@ -43,6 +43,9 @@ class ModelViewBase(Generic[DjangoModelType]):
     def __str__(self) -> str:
         return str(self._obj)
 
+    def __repr__(self) -> str:
+        return str(self)
+
     def __eq__(self, other: object) -> bool:
         return isinstance(other, ModelViewBase) and self._obj == other._obj
 
@@ -85,6 +88,18 @@ class Chore(ModelViewBase[models.Chore]):
                                           self._obj.overdue_duration)
 
         return self._status
+
+    @property
+    def weight(self):
+        status = self.status
+        if status.state == "completed":
+            return status.percentage
+        elif status.state == "due":
+            return status.percentage + 100
+        elif status.state == "overdue":
+            return status.percentage + 200
+        else:
+            raise ValueError("State value is unexpected")
 
     def next_due(self) -> datetime.datetime:
         if self.latest_log is None:

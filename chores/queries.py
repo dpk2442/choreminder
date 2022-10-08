@@ -1,4 +1,4 @@
-from typing import Union
+from typing import List, Union
 
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import AnonymousUser
@@ -6,7 +6,7 @@ from django.contrib.auth.models import AnonymousUser
 from chores import model_views, models
 
 
-def query_chores(user: Union[AbstractBaseUser, AnonymousUser]):
+def query_chores(user: Union[AbstractBaseUser, AnonymousUser]) -> List[model_views.Chore]:
     if user is None:
         raise ValueError("Invalid user provided")
 
