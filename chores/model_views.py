@@ -18,7 +18,7 @@ def compute_status(current_time: datetime.datetime,
                    due_duration: datetime.timedelta,
                    overdue_duration: Optional[datetime.timedelta]) -> "ChoreStatus":
     if latest_log_timestamp is None:
-        return ChoreStatus(None, None, 0)
+        return ChoreStatus("due", None, 0)
     else:
         next_due = latest_log_timestamp + due_duration
         if next_due > current_time:

@@ -13,7 +13,7 @@ class ComputeStatusTest(TestCase):
 
     def test_no_latest_log(self):
         status = model_views.compute_status(timezone.now(), None, None, None)
-        self.assertEqual(status, model_views.ChoreStatus(None, None, 0))
+        self.assertEqual(status, model_views.ChoreStatus("due", None, 0))
 
     def test_completed(self):
         now = timezone.now()
