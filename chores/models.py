@@ -7,7 +7,8 @@ class Chore(models.Model):
     name = models.CharField("Name", max_length=100)
     description = models.TextField("Description")
     due_duration = models.DurationField("Due Duration")
-    overdue_duration = models.DurationField("Overdue Duration")
+    overdue_duration = models.DurationField(
+        "Overdue Duration", null=True, blank=True)
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
 
     def __str__(self):

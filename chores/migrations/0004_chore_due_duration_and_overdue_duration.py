@@ -17,6 +17,11 @@ class Migration(migrations.Migration):
             old_name="repeat_interval",
             new_name="due_duration",
         ),
+        migrations.AlterField(
+            model_name="chore",
+            name="due_duration",
+            field=models.DurationField(verbose_name="Due Duration"),
+        ),
         migrations.AddField(
             model_name="chore",
             name="overdue_duration",

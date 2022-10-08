@@ -117,13 +117,28 @@ class ChoreAddViewTests(AuthenticatedTest):
         self.assertEqual(chore.due_duration, datetime.timedelta(days=1))
         self.assertEqual(chore.overdue_duration, datetime.timedelta())
 
+    def test_post_valid_no_overdue(self):
+        chore_name = create_random_string()
+        response = self.client.post(reverse("chores:add_chore"), dict(
+            name=chore_name,
+            description="description",
+            due_duration="1 day",
+        ))
+        self.assertRedirects(response, reverse("chores:index"))
+
+        chore: models.Chore = models.Chore.objects.get(name=chore_name)
+        self.assertEqual(chore.name, chore_name)
+        self.assertEqual(chore.description, "description")
+        self.assertEqual(chore.due_duration, datetime.timedelta(days=1))
+        self.assertIsNone(chore.overdue_duration)
+
     def test_post_invalid(self):
         chore_name = create_random_string()
         response = self.client.post(reverse("chores:add_chore"), dict(
             name=chore_name,
         ))
 
-        self.assertContains(response, "This field is required.", 3)
+        self.assertContains(response, "This field is required.", 2)
         self.assertQuerysetEqual(
             models.Chore.objects.filter(name=chore_name), [])
 
@@ -172,13 +187,28 @@ class ChoreEditViewTests(AuthenticatedTest):
         chore = models.Chore.objects.get(pk=chore.id)
         self.assertEqual(chore.description, "edited description")
 
+    def test_post_valid_remove_overdue(self):
+        chore = self.create_chore_in_db()
+        response = self.client.post(reverse("chores:edit_chore", args=(chore.id,)), dict(
+            name=chore.name,
+            description="edited description",
+            due_duration="1 day",
+        ))
+        self.assertRedirects(response, reverse("chores:index"))
+
+        chore: models.Chore = models.Chore.objects.get(pk=chore.id)
+        self.assertEqual(chore.name, chore.name)
+        self.assertEqual(chore.description, "edited description")
+        self.assertEqual(chore.due_duration, datetime.timedelta(days=1))
+        self.assertIsNone(chore.overdue_duration)
+
     def test_post_invalid(self):
         chore = self.create_chore_in_db()
         response = self.client.post(reverse("chores:edit_chore", args=(chore.id,)), dict(
             name=chore.name,
         ))
 
-        self.assertContains(response, "This field is required.", 3)
+        self.assertContains(response, "This field is required.", 2)
         chore = models.Chore.objects.get(pk=chore.id)
         self.assertNotEqual(chore.description, "edited description")
 
