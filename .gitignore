@@ -2,4 +2,4 @@
 __pycache__
 
 # app data
-/db.sqlite3
+/data
