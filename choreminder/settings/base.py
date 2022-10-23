@@ -1,8 +1,14 @@
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+DATA_DIR = BASE_DIR / "data"
 
-SECRET_KEY = "django-insecure-s_&ntq3o@q@o=*ig0mh=jg^4#)3pz!8c=j7^a4pp_isb6(ip2f"
+try:
+    with open(DATA_DIR / "secretkey.txt", "r") as f:
+        SECRET_KEY = f.read().strip()
+except:
+    pass
+
 
 ALLOWED_HOSTS = []
 
@@ -56,7 +62,7 @@ WSGI_APPLICATION = "choreminder.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "data" / "db.sqlite3",
+        "NAME": DATA_DIR / "db.sqlite3",
     }
 }
 
