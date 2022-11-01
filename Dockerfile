@@ -19,12 +19,7 @@ WORKDIR /app
 EXPOSE 9090
 
 # Copy local files
-COPY ./run.sh .
-COPY ./uwsgi.ini .
-COPY ./manage.py .
-COPY ./assets ./assets
-COPY ./choreminder ./choreminder
-COPY ./chores ./chores
+COPY . .
 
 # Copy virtual env
 COPY --from=python-build /app/.venv ./.venv

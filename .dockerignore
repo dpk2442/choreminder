@@ -1,0 +1,8 @@
+/.git
+/.github
+/.vscode
+/data
+/.devcontainer.json
+/.gitignore
+/Dockerfile
+/README.md
