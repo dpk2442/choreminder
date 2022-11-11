@@ -4,7 +4,7 @@ WORKDIR /app
 ENV PIPENV_VENV_IN_PROJECT 1
 COPY Pipfile.lock .
 RUN apt-get update && \
-    apt-get -y install build-essential && \
+    apt-get -y install build-essential mime-support && \
     pip install --upgrade pip && \
     pip install pipenv virtualenv && \
     pipenv requirements > requirements.txt && \
@@ -14,6 +14,9 @@ RUN apt-get update && \
 # Final container
 FROM python:3.10-slim
 WORKDIR /app
+
+# Install mime support
+COPY --from=python-build /etc/mime.types /etc/mime.types
 
 # Expose ports
 EXPOSE 9090
