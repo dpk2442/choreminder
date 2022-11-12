@@ -8,6 +8,7 @@ from chores import actions, forms, models, queries
 
 
 @login_required
+@require_GET
 def index(request: HttpRequest):
     chores = actions.get_sorted_chores(request.user)
     return render(request, "chores/index.html", dict(
