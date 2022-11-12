@@ -8,7 +8,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from .utils import create_random_string
+from ..utils import create_random_string
 
 
 class AuthenticatedTest(TestCase):
@@ -28,6 +28,11 @@ class AuthenticatedTest(TestCase):
         return models.Log.objects.create(
             timestamp=timezone.now(),
             chore=chore,
+            user=self.user)
+
+    def create_category_in_db(self) -> models.Category:
+        return models.Category.objects.create(
+            name=create_random_string(),
             user=self.user)
 
     def setUp(self) -> None:

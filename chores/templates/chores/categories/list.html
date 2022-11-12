@@ -1,0 +1,19 @@
+{% extends "chores/base.html" %}
+{% block content %}
+{% if categories %}
+<ul>
+    {% for category in categories %}
+    <li>
+        {{ category.name }} |
+        <a href="{% url "chores:edit_category" category.id %}">Edit</a> |
+        <a href="{% url "chores:delete_category" category.id %}">Delete</a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No categories to display.</p>
+{% endif %}
+<p>
+    <a href="{% url "chores:add_category" %}">Add Category</a>
+</p>
+{% endblock %}

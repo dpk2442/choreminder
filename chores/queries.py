@@ -11,3 +11,10 @@ def query_chores(user: Union[AbstractBaseUser, AnonymousUser]) -> List[model_vie
         raise ValueError("Invalid user provided")
 
     return list(map(model_views.Chore, models.Chore.objects.filter(user=user).order_by("id")))
+
+
+def query_categories(user: Union[AbstractBaseUser, AnonymousUser]) -> List[model_views.Category]:
+    if user is None:
+        raise ValueError("Invalid user provided")
+
+    return list(map(model_views.Category, models.Category.objects.filter(user=user).order_by("id")))

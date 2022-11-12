@@ -137,3 +137,17 @@ class ChoreStatus(object):
 
     def __repr__(self) -> str:
         return self.__str__()
+
+
+class Category(ModelViewBase[models.Category]):
+
+    def __init__(self, category: models.Category):
+        super().__init__(category)
+
+    @property
+    def id(self):
+        return self._obj.id
+
+    @property
+    def name(self):
+        return self._obj.name

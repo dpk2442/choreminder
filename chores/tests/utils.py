@@ -36,3 +36,10 @@ def create_log(timestamp: datetime.datetime, chore: models.Chore, user: User) ->
         chore=chore,
         user=user,
     )
+
+
+def create_category(user: User) -> models.Category:
+    return models.Category.objects.create(
+        name=create_random_string(),
+        user=user,
+    )

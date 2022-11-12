@@ -14,3 +14,9 @@ class ChoreForm(forms.ModelForm):
             "due_duration": "The amount of time since last completion before a task is considered due.",
             "overdue_duration": "The amount of time after a task is due before a it is considered overdue.",
         }
+
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = models.Category
+        fields = ["name"]
