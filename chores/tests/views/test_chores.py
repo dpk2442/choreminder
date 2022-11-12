@@ -1,47 +1,13 @@
 import datetime
 
-from chores import forms, model_views, models
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.template import defaultfilters
-from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
+from chores import forms, model_views, models
 from ..utils import create_random_string
-
-
-class AuthenticatedTest(TestCase):
-
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-
-    def create_chore_in_db(self) -> models.Chore:
-        return models.Chore.objects.create(
-            name=create_random_string(),
-            description="Test Description",
-            due_duration=datetime.timedelta(days=1),
-            overdue_duration=datetime.timedelta(),
-            user=self.user)
-
-    def create_log_in_db(self, chore: models.Chore) -> models.Log:
-        return models.Log.objects.create(
-            timestamp=timezone.now(),
-            chore=chore,
-            user=self.user)
-
-    def create_category_in_db(self) -> models.Category:
-        return models.Category.objects.create(
-            name=create_random_string(),
-            user=self.user)
-
-    def setUp(self) -> None:
-        super().setUp()
-        self.user, _ = User.objects.get_or_create(
-            username=create_random_string())
-        self.user2, _ = User.objects.get_or_create(
-            username=create_random_string())
-        self.client.force_login(self.user)
+from .utils import AuthenticatedTest
 
 
 class ChoreIndexViewTests(AuthenticatedTest):
@@ -80,22 +46,6 @@ class ChoreIndexViewTests(AuthenticatedTest):
         self.assertContains(response, "Completed")
         self.assertContains(response, defaultfilters.date(timezone.localtime(
             log.timestamp + datetime.timedelta(days=1)), settings.DATETIME_FORMAT))
-
-
-class LoginTest(TestCase):
-
-    def test_redirects_if_not_logged_in(self):
-        response = self.client.get(reverse("chores:index"))
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.headers["Location"], "{}?next={}".format(
-            reverse("login"), reverse("chores:index")))
-
-    def test_shows_logout_if_logged_in(self):
-        user, _ = User.objects.get_or_create(username="test")
-        self.client.force_login(user)
-        response = self.client.get(reverse("chores:index"))
-        self.assertContains(
-            response, "<a href=\"{}\">Logout</a>".format(reverse("logout")))
 
 
 class ChoreAddViewTests(AuthenticatedTest):

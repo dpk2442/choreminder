@@ -2,7 +2,7 @@ from django.urls import reverse
 
 from chores import forms, model_views, models
 from ..utils import create_random_string
-from .test_chores import AuthenticatedTest
+from .utils import AuthenticatedTest
 
 
 class CategoriesListViewTests(AuthenticatedTest):
