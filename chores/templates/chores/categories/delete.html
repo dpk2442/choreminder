@@ -1,8 +1,0 @@
-{% extends "chores/base.html" %}
-{% block content %}
-    <form action="{% url "chores:delete_category" category.id %}" method="post">
-        {% csrf_token %}
-        <p>Are you sure you want to delete "{{ category.name }}"?</p>
-        <input type="submit" value="Yes">
-    </form>
-{% endblock %}

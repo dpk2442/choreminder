@@ -27,8 +27,8 @@ class AuthenticatedTest(TestCase):
             chore=chore,
             user=self.user)
 
-    def create_category_in_db(self) -> models.Category:
-        return models.Category.objects.create(
+    def create_tag_in_db(self) -> models.Tag:
+        return models.Tag.objects.create(
             name=create_random_string(),
             user=self.user)
 

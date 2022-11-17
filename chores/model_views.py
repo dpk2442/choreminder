@@ -139,10 +139,10 @@ class ChoreStatus(object):
         return self.__str__()
 
 
-class Category(ModelViewBase[models.Category]):
+class Tag(ModelViewBase[models.Tag]):
 
-    def __init__(self, category: models.Category):
-        super().__init__(category)
+    def __init__(self, tag: models.Tag):
+        super().__init__(tag)
 
     @property
     def id(self):

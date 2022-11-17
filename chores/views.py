@@ -78,61 +78,61 @@ def log_chore(request: HttpRequest, chore_id: int):
 
 @login_required
 @require_GET
-def list_categories(request: HttpRequest):
-    categories = queries.query_categories(request.user)
-    return render(request, "chores/categories/list.html", dict(
-        title="Categories",
-        categories=categories,
+def list_tags(request: HttpRequest):
+    tags = queries.query_tags(request.user)
+    return render(request, "chores/tags/list.html", dict(
+        title="Tags",
+        tags=tags,
     ))
 
 
 @login_required
-def add_category(request: HttpRequest):
+def add_tag(request: HttpRequest):
     if request.method == "POST":
-        form = forms.CategoryForm(request.POST)
+        form = forms.TagForm(request.POST)
         if form.is_valid():
-            category = form.save(commit=False)
-            category.user = request.user
-            category.save()
-            return redirect("chores:list_categories")
+            tag = form.save(commit=False)
+            tag.user = request.user
+            tag.save()
+            return redirect("chores:list_tags")
     else:
-        form = forms.CategoryForm()
+        form = forms.TagForm()
 
-    return render(request, "chores/categories/form.html", dict(
-        title="Add Category",
-        url=resolve_url("chores:add_category"),
+    return render(request, "chores/tags/form.html", dict(
+        title="Add tag",
+        url=resolve_url("chores:add_tag"),
         form=form,
     ))
 
 
 @login_required
-def edit_category(request: HttpRequest, category_id: int):
-    category = get_object_or_404(
-        models.Category, pk=category_id, user=request.user)
+def edit_tag(request: HttpRequest, tag_id: int):
+    tag = get_object_or_404(
+        models.Tag, pk=tag_id, user=request.user)
     if request.method == "POST":
-        form = forms.CategoryForm(request.POST, instance=category)
+        form = forms.TagForm(request.POST, instance=tag)
         if form.is_valid():
             form.save()
-            return redirect("chores:list_categories")
+            return redirect("chores:list_tags")
     else:
-        form = forms.CategoryForm(instance=category)
+        form = forms.TagForm(instance=tag)
 
-    return render(request, "chores/categories/form.html", dict(
-        title="Edit Category",
-        url=resolve_url("chores:edit_category", category_id),
+    return render(request, "chores/tags/form.html", dict(
+        title="Edit tag",
+        url=resolve_url("chores:edit_tag", tag_id),
         form=form,
     ))
 
 
 @login_required
-def delete_category(request: HttpRequest, category_id: int):
-    category = get_object_or_404(
-        models.Category, pk=category_id, user=request.user)
+def delete_tag(request: HttpRequest, tag_id: int):
+    tag = get_object_or_404(
+        models.Tag, pk=tag_id, user=request.user)
     if request.method == "POST":
-        category.delete()
-        return redirect("chores:list_categories")
+        tag.delete()
+        return redirect("chores:list_tags")
 
-    return render(request, "chores/categories/delete.html", dict(
-        title="Delete Category",
-        category=category,
+    return render(request, "chores/tags/delete.html", dict(
+        title="Delete tag",
+        tag=tag,
     ))

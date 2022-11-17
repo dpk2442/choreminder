@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from chores import model_views, queries
-from .utils import create_category, create_chore, create_random_user
+from .utils import create_tag, create_chore, create_random_user
 
 
 class TestQueryChores(TestCase):
@@ -24,11 +24,11 @@ class TestQueryChores(TestCase):
         self.assertEqual(queries.query_chores(user2), [])
 
 
-class TestQueryCategories(TestCase):
+class TestQueryTags(TestCase):
 
     def test_invalid_user(self):
         with self.assertRaises(ValueError) as cm:
-            queries.query_categories(None)
+            queries.query_tags(None)
 
         self.assertEqual(str(cm.exception), "Invalid user provided")
 
@@ -36,9 +36,9 @@ class TestQueryCategories(TestCase):
         user1 = create_random_user()
         user2 = create_random_user()
 
-        category1 = create_category(user1)
-        category2 = create_category(user1)
+        tag1 = create_tag(user1)
+        tag2 = create_tag(user1)
 
-        self.assertEqual(queries.query_categories(user1), [
-                         model_views.Category(category1), model_views.Category(category2)])
-        self.assertEqual(queries.query_categories(user2), [])
+        self.assertEqual(queries.query_tags(user1), [
+                         model_views.Tag(tag1), model_views.Tag(tag2)])
+        self.assertEqual(queries.query_tags(user2), [])

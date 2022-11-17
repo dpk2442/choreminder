@@ -16,7 +16,7 @@ class ChoreForm(forms.ModelForm):
         }
 
 
-class CategoryForm(forms.ModelForm):
+class TagForm(forms.ModelForm):
     class Meta:
-        model = models.Category
+        model = models.Tag
         fields = ["name"]
