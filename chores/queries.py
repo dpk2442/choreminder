@@ -1,19 +1,17 @@
-from typing import List, Union
-
-from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import AnonymousUser
+from typing import List
 
 from chores import model_views, models
+from chores.typing import UserType
 
 
-def query_chores(user: Union[AbstractBaseUser, AnonymousUser]) -> List[model_views.Chore]:
+def query_chores(user: UserType) -> List[model_views.Chore]:
     if user is None:
         raise ValueError("Invalid user provided")
 
     return list(map(model_views.Chore, models.Chore.objects.filter(user=user).order_by("id")))
 
 
-def query_tags(user: Union[AbstractBaseUser, AnonymousUser]) -> List[model_views.Tag]:
+def query_tags(user: UserType) -> List[model_views.Tag]:
     if user is None:
         raise ValueError("Invalid user provided")
 

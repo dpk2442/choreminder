@@ -1,10 +1,7 @@
-from typing import Union
-
 from django import forms
-from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import AnonymousUser
 
 from chores import models
+from chores.typing import UserType
 
 
 class TagChoiceField(forms.ModelMultipleChoiceField):
@@ -32,7 +29,7 @@ class ChoreForm(forms.ModelForm):
             "overdue_duration": "The amount of time after a task is due before a it is considered overdue.",
         }
 
-    def __init__(self, user: Union[AbstractBaseUser, AnonymousUser], *args, **kwargs):
+    def __init__(self, user: UserType, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["tags"].queryset = models.Tag.objects.filter(user=user)
 
