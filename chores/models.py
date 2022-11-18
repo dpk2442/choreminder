@@ -5,7 +5,7 @@ from django.utils import timezone
 
 class Chore(models.Model):
     name = models.CharField("Name", max_length=100)
-    description = models.TextField("Description")
+    description = models.TextField("Description", blank=True)
     due_duration = models.DurationField("Due Duration")
     overdue_duration = models.DurationField(
         "Overdue Duration", null=True, blank=True)
