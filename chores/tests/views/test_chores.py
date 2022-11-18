@@ -53,6 +53,10 @@ class ChoreAddViewTests(AuthenticatedTest):
     def test_get(self):
         response = self.client.get(reverse("chores:add_chore"))
         self.assertContains(response, "Name")
+        self.assertContains(response, "Tags")
+        self.assertContains(response, "Description")
+        self.assertContains(response, "Due Duration")
+        self.assertContains(response, "Overdue Duration")
         self.assertIsNotNone(response.context["form"])
         self.assertIsInstance(response.context["form"], forms.ChoreForm)
 

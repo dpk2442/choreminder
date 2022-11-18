@@ -9,6 +9,12 @@
         </fieldset>
 
         <fieldset>
+            {{ form.tags.label_tag }}
+            {{ form.tags }}
+            {{ form.tags.errors }}
+        </fieldset>
+
+        <fieldset>
             {{ form.description.label_tag }}
             {{ form.description }}
             {{ form.description.errors }}

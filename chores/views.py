@@ -20,14 +20,14 @@ def index(request: HttpRequest):
 @login_required
 def add_chore(request: HttpRequest):
     if request.method == "POST":
-        form = forms.ChoreForm(request.POST)
+        form = forms.ChoreForm(request.user, request.POST)
         if form.is_valid():
             chore = form.save(commit=False)
             chore.user = request.user
             chore.save()
             return redirect("chores:index")
     else:
-        form = forms.ChoreForm()
+        form = forms.ChoreForm(request.user)
 
     return render(request, "chores/chore_form.html", dict(
         title="Add Chore",
@@ -40,12 +40,12 @@ def add_chore(request: HttpRequest):
 def edit_chore(request: HttpRequest, chore_id: int):
     chore = get_object_or_404(models.Chore, pk=chore_id, user=request.user)
     if request.method == "POST":
-        form = forms.ChoreForm(request.POST, instance=chore)
+        form = forms.ChoreForm(request.user, request.POST, instance=chore)
         if form.is_valid():
             form.save()
             return redirect("chores:index")
     else:
-        form = forms.ChoreForm(instance=chore)
+        form = forms.ChoreForm(request.user, instance=chore)
 
     return render(request, "chores/chore_form.html", dict(
         title="Edit Chore",
