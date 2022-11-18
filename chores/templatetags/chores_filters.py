@@ -1,6 +1,9 @@
 from datetime import timedelta
+from typing import List
 
 from django import template
+
+from chores import model_views
 
 register = template.Library()
 
@@ -20,3 +23,8 @@ def format_status_state(state: str):
         return "Due"
     elif state == "overdue":
         return "Overdue"
+
+
+@register.filter(is_safe=True)
+def format_tag_list(tags: List[model_views.Tag]):
+    return ", ".join(map(lambda tag: tag.name, tags))

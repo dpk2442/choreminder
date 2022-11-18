@@ -13,13 +13,18 @@ class AuthenticatedTest(TestCase):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
-    def create_chore_in_db(self) -> models.Chore:
-        return models.Chore.objects.create(
+    def create_chore_in_db(self, tags=None) -> models.Chore:
+        chore = models.Chore.objects.create(
             name=create_random_string(),
             description="Test Description",
             due_duration=datetime.timedelta(days=1),
             overdue_duration=datetime.timedelta(),
             user=self.user)
+
+        if tags is not None:
+            chore.tags.set(tags)
+
+        return chore
 
     def create_log_in_db(self, chore: models.Chore) -> models.Log:
         return models.Log.objects.create(

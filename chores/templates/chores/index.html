@@ -6,6 +6,7 @@
     <tr>
         <th>Name</th>
         <th>Description</th>
+        <th>Tags</th>
         <th>Last done</th>
         <th>Next due</th>
         <th>Status</th>
@@ -16,6 +17,7 @@
     <tr>
         <td>{{ chore.name }}</td>
         <td>{{ chore.description }}</td>
+        <td>{{ chore.tags | format_tag_list }}</td>
         <td>{{ chore.latest_log.timestamp }}</td>
         <td>{{ chore.next_due | default:"" }}</td>
         <td>{{ chore.status.state | format_status_state }}</td>

@@ -47,6 +47,14 @@ class ChoreIndexViewTests(AuthenticatedTest):
         self.assertContains(response, defaultfilters.date(timezone.localtime(
             log.timestamp + datetime.timedelta(days=1)), settings.DATETIME_FORMAT))
 
+    def test_shows_tags(self):
+        tag1 = self.create_tag_in_db()
+        tag2 = self.create_tag_in_db()
+        chore = self.create_chore_in_db(tags=[tag1, tag2])
+        response = self.client.get(reverse("chores:index"))
+        self.assertContains(response, "Tags")
+        self.assertContains(response, "{}, {}".format(tag1.name, tag2.name))
+
 
 class ChoreAddViewTests(AuthenticatedTest):
 

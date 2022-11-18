@@ -57,6 +57,7 @@ class Chore(ModelViewBase[models.Chore]):
         self._fetched_latest_log = False
         self._latest_log = None
         self._status = None
+        self._tags = None
 
     @property
     def id(self):
@@ -100,6 +101,13 @@ class Chore(ModelViewBase[models.Chore]):
             return status.percentage + 200
         else:
             raise ValueError("State value is unexpected")
+
+    @property
+    def tags(self):
+        if self._tags is None:
+            self._tags = list(map(Tag, self._obj.tags.all()))
+
+        return self._tags
 
     def next_due(self) -> datetime.datetime:
         if self.latest_log is None:
