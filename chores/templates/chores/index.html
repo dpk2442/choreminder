@@ -1,6 +1,14 @@
 {% extends "chores/base.html" %}
 {% load chores_filters %}
 {% block content %}
+
+{% if tag_form.has_tags %}
+<form method="get" action="">
+    {{ tag_form.tag }}
+    <input type="submit" value="Filter">
+</form>
+{% endif %}
+
 {% if chores %}
 <table>
     <tr>

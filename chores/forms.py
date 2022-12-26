@@ -4,7 +4,16 @@ from chores import models
 from chores.typing import UserType
 
 
-class TagChoiceField(forms.ModelMultipleChoiceField):
+class TagChoiceField(forms.ModelChoiceField):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def label_from_instance(self, tag: models.Tag) -> str:
+        return tag.name
+
+
+class TagMultipleChoiceField(forms.ModelMultipleChoiceField):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -19,7 +28,7 @@ class ChoreForm(forms.ModelForm):
         fields = ["name", "tags", "description",
                   "due_duration", "overdue_duration"]
         field_classes = {
-            "tags": TagChoiceField
+            "tags": TagMultipleChoiceField
         }
         labels = {
             "overdue_duration": "Overdue Duration (Optional)"
@@ -38,3 +47,14 @@ class TagForm(forms.ModelForm):
     class Meta:
         model = models.Tag
         fields = ["name"]
+
+
+class TagFilterForm(forms.Form):
+    tag = TagChoiceField(queryset=None, required=False)
+
+    def __init__(self, user: UserType, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["tag"].queryset = models.Tag.objects.filter(user=user)
+
+    def has_tags(self):
+        return len(self.fields["tag"].queryset) != 0

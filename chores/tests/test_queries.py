@@ -8,7 +8,7 @@ class TestQueryChores(TestCase):
 
     def test_invalid_user(self):
         with self.assertRaises(ValueError) as cm:
-            queries.query_chores(None)
+            queries.query_chores(None, None)
 
         self.assertEqual(str(cm.exception), "Invalid user provided")
 
@@ -19,9 +19,24 @@ class TestQueryChores(TestCase):
         chore1 = create_chore(user1)
         chore2 = create_chore(user1)
 
-        self.assertEqual(queries.query_chores(user1), [
+        self.assertEqual(queries.query_chores(user1, None), [
                          model_views.Chore(chore1), model_views.Chore(chore2)])
-        self.assertEqual(queries.query_chores(user2), [])
+        self.assertEqual(queries.query_chores(user2, None), [])
+
+    def test_chore_tag_filter(self):
+        user = create_random_user()
+
+        tag1 = create_tag(user)
+        chore1 = create_chore(user, tag=tag1)
+        chore2 = create_chore(user, tag=tag1)
+
+        tag2 = create_tag(user)
+        chore3 = create_chore(user, tag=tag2)
+
+        self.assertEqual(queries.query_chores(user, tag1.id), [
+                         model_views.Chore(chore1), model_views.Chore(chore2)])
+        self.assertEqual(queries.query_chores(user, tag2.id),
+                         [model_views.Chore(chore3)])
 
 
 class TestQueryTags(TestCase):

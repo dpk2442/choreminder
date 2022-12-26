@@ -24,5 +24,5 @@ class TestGetSortedChores(TestCase):
 
         chore_no_log = create_chore(user)
 
-        self.assertEqual(actions.get_sorted_chores(user), list(map(model_views.Chore, [
+        self.assertEqual(actions.get_sorted_chores(user, None), list(map(model_views.Chore, [
                          chore_overdue, chore_due, chore_no_log, chore_completed])))

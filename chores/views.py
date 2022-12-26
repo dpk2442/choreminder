@@ -10,10 +10,15 @@ from chores import actions, forms, models, queries
 @login_required
 @require_GET
 def index(request: HttpRequest):
-    chores = actions.get_sorted_chores(request.user)
+    tag_form = forms.TagFilterForm(request.user, request.GET)
+    tag_id = (tag_form.cleaned_data["tag"].id
+              if tag_form.is_valid() and tag_form.cleaned_data["tag"] is not None
+              else None)
+    chores = actions.get_sorted_chores(request.user, tag_id)
     return render(request, "chores/index.html", dict(
         title="Chores",
         chores=chores,
+        tag_form=tag_form,
     ))
 
 

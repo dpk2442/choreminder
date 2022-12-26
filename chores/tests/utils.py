@@ -20,14 +20,19 @@ def create_random_user() -> User:
     return User.objects.create(username=create_random_string())
 
 
-def create_chore(user: User) -> models.Chore:
-    return models.Chore.objects.create(
+def create_chore(user: User, tag: models.Tag = None) -> models.Chore:
+    chore = models.Chore.objects.create(
         name=create_random_string(),
         description="Test Description",
         due_duration=datetime.timedelta(days=1),
         overdue_duration=datetime.timedelta(days=1),
         user=user,
     )
+
+    if tag is not None:
+        chore.tags.set((tag,))
+
+    return chore
 
 
 def create_log(timestamp: datetime.datetime, chore: models.Chore, user: User) -> models.Log:

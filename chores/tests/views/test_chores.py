@@ -50,10 +50,36 @@ class ChoreIndexViewTests(AuthenticatedTest):
     def test_shows_tags(self):
         tag1 = self.create_tag_in_db()
         tag2 = self.create_tag_in_db()
-        chore = self.create_chore_in_db(tags=[tag1, tag2])
+        _ = self.create_chore_in_db(tags=[tag1, tag2])
         response = self.client.get(reverse("chores:index"))
         self.assertContains(response, "Tags")
         self.assertContains(response, "{}, {}".format(tag1.name, tag2.name))
+
+    def test_tag_filter(self):
+        tag1 = self.create_tag_in_db()
+        tag2 = self.create_tag_in_db()
+        chore1 = self.create_chore_in_db(tags=[tag1])
+        chore2 = self.create_chore_in_db(tags=[tag1, tag2])
+        chore3 = self.create_chore_in_db(tags=[tag2])
+        chore4 = self.create_chore_in_db()
+
+        response = self.client.get(f"{reverse('chores:index')}?tag=")
+        self.assertContains(response, chore1.name)
+        self.assertContains(response, chore2.name)
+        self.assertContains(response, chore3.name)
+        self.assertContains(response, chore4.name)
+
+        response = self.client.get(f"{reverse('chores:index')}?tag={tag1.id}")
+        self.assertContains(response, chore1.name)
+        self.assertContains(response, chore2.name)
+        self.assertNotContains(response, chore3.name)
+        self.assertNotContains(response, chore4.name)
+
+        response = self.client.get(f"{reverse('chores:index')}?tag={tag2.id}")
+        self.assertNotContains(response, chore1.name)
+        self.assertContains(response, chore2.name)
+        self.assertContains(response, chore3.name)
+        self.assertNotContains(response, chore4.name)
 
 
 class ChoreAddViewTests(AuthenticatedTest):
