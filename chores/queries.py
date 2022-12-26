@@ -1,7 +1,7 @@
 from typing import List
 
 from chores import model_views, models
-from chores.typing import UserType
+from chores.type_helpers import UserType
 
 
 def query_chores(user: UserType, tag_id: int | None) -> List[model_views.Chore]:

@@ -1,7 +1,7 @@
 from django import forms
 
 from chores import models
-from chores.typing import UserType
+from chores.type_helpers import UserType
 
 
 class TagChoiceField(forms.ModelChoiceField):

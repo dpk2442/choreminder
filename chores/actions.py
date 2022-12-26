@@ -1,5 +1,5 @@
 from . import queries
-from .typing import UserType
+from .type_helpers import UserType
 
 
 def get_sorted_chores(user: UserType, tag_id: int | None):
