@@ -20,3 +20,10 @@ def query_tags(user: UserType) -> List[model_views.Tag]:
         raise ValueError("Invalid user provided")
 
     return list(map(model_views.Tag, models.Tag.objects.filter(user=user).order_by("id")))
+
+
+def query_away_dates(user: UserType) -> List[model_views.AwayDate]:
+    if user is None:
+        raise ValueError("Invalid user provided")
+
+    return list(map(model_views.AwayDate, models.AwayDate.objects.filter(user=user).order_by("id")))

@@ -159,3 +159,25 @@ class Tag(ModelViewBase[models.Tag]):
     @property
     def name(self):
         return self._obj.name
+
+
+class AwayDate(ModelViewBase[models.AwayDate]):
+
+    def __init__(self, away_date: models.AwayDate):
+        super().__init__(away_date)
+
+    @property
+    def id(self):
+        return self._obj.id
+
+    @property
+    def name(self):
+        return self._obj.name
+
+    @property
+    def start_date(self):
+        return self._obj.start_date
+
+    @property
+    def end_date(self):
+        return self._obj.end_date

@@ -1,0 +1,25 @@
+{% extends "chores/base.html" %}
+{% block content %}
+{% if away_dates %}
+<ul>
+    {% for away_date in away_dates %}
+    <li>
+        {{ away_date.name }}
+        {% if away_date.start_date == away_date.end_date %}
+        ({{ away_date.start_date }})
+        {% else %}
+        ({{ away_date.start_date }} - {{ away_date.end_date }})
+        {% endif %}
+        |
+        <a href="{% url "chores:edit_away_date" away_date.id %}">Edit</a> |
+        <a href="{% url "chores:delete_away_date" away_date.id %}">Delete</a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No away dates to display.</p>
+{% endif %}
+<p>
+    <a href="{% url "chores:add_away_date" %}">Add away date</a>
+</p>
+{% endblock %}

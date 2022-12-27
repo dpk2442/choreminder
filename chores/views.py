@@ -141,3 +141,65 @@ def delete_tag(request: HttpRequest, tag_id: int):
         title="Delete tag",
         tag=tag,
     ))
+
+
+@login_required
+@require_GET
+def list_away_dates(request: HttpRequest):
+    away_dates = queries.query_away_dates(request.user)
+    return render(request, "chores/away_dates/list.html", dict(
+        title="Away Dates",
+        away_dates=away_dates,
+    ))
+
+
+@login_required
+def add_away_date(request: HttpRequest):
+    if request.method == "POST":
+        form = forms.AwayDateForm(request.POST)
+        if form.is_valid():
+            away_date = form.save(commit=False)
+            away_date.user = request.user
+            away_date.save()
+            return redirect("chores:list_away_dates")
+    else:
+        form = forms.AwayDateForm()
+
+    return render(request, "chores/away_dates/form.html", dict(
+        title="Add Away Date",
+        url=resolve_url("chores:add_away_date"),
+        form=form,
+    ))
+
+
+@login_required
+def edit_away_date(request: HttpRequest, away_date_id: int):
+    away_date = get_object_or_404(
+        models.AwayDate, pk=away_date_id, user=request.user)
+    if request.method == "POST":
+        form = forms.AwayDateForm(request.POST, instance=away_date)
+        if form.is_valid():
+            form.save()
+            return redirect("chores:list_away_dates")
+    else:
+        form = forms.AwayDateForm(instance=away_date)
+
+    return render(request, "chores/away_dates/form.html", dict(
+        title="Edit Away Date",
+        url=resolve_url("chores:edit_away_date", away_date_id),
+        form=form,
+    ))
+
+
+@login_required
+def delete_away_date(request: HttpRequest, away_date_id: int):
+    away_date = get_object_or_404(
+        models.AwayDate, pk=away_date_id, user=request.user)
+    if request.method == "POST":
+        away_date.delete()
+        return redirect("chores:list_away_dates")
+
+    return render(request, "chores/away_dates/delete.html", dict(
+        title="Delete Away Date",
+        away_date=away_date,
+    ))

@@ -37,6 +37,20 @@ class AuthenticatedTest(TestCase):
             name=create_random_string(),
             user=self.user)
 
+    def create_away_date_in_db(self, start_date=None, end_date=None) -> models.AwayDate:
+        if start_date is None:
+            start_date = timezone.now().today()
+
+        if end_date is None:
+            end_date = start_date + datetime.timedelta(days=1)
+
+        return models.AwayDate.objects.create(
+            name=create_random_string(),
+            start_date=start_date,
+            end_date=end_date,
+            user=self.user,
+        )
+
     def setUp(self) -> None:
         super().setUp()
         self.user, _ = User.objects.get_or_create(

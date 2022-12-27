@@ -3,6 +3,7 @@ import random
 import string
 
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 from chores import models
 
@@ -46,5 +47,17 @@ def create_log(timestamp: datetime.datetime, chore: models.Chore, user: User) ->
 def create_tag(user: User) -> models.Tag:
     return models.Tag.objects.create(
         name=create_random_string(),
+        user=user,
+    )
+
+
+def create_away_date(user: User) -> models.AwayDate:
+    start_date = timezone.now().today()
+    end_date = start_date + datetime.timedelta(days=1)
+
+    return models.AwayDate.objects.create(
+        name=create_random_string(),
+        start_date=start_date,
+        end_date=end_date,
         user=user,
     )

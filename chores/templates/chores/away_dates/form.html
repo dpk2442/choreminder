@@ -1,0 +1,26 @@
+{% extends "chores/base.html" %}
+{% block content %}
+    <form action="{{ url }}" method="post">
+        {% csrf_token %}
+
+        <fieldset>
+            {{ form.name.label_tag }}
+            {{ form.name }}
+            {{ form.name.errors }}
+        </fieldset>
+
+        <fieldset>
+            {{ form.start_date.label_tag }}
+            {{ form.start_date }}
+            {{ form.start_date.errors }}
+        </fieldset>
+
+        <fieldset>
+            {{ form.end_date.label_tag }}
+            {{ form.end_date }}
+            {{ form.end_date.errors }}
+        </fieldset>
+
+        <p><input type="submit" value="Save"></p>
+    </form>
+{% endblock %}

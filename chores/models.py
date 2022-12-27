@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 
@@ -38,3 +39,26 @@ class Tag(models.Model):
 
     def __str__(self):
         return "Tag(name={}, user={})".format(self.name, self.user)
+
+
+class AwayDate(models.Model):
+    name = models.CharField("Name", max_length=100)
+    start_date = models.DateField("Start Date")
+    end_date = models.DateField("End Date")
+    user = models.ForeignKey(
+        get_user_model(), on_delete=models.SET_NULL, null=True)
+
+    def clean(self):
+        if self.start_date is not None and self.end_date is not None and self.start_date > self.end_date:
+            raise ValidationError(dict(
+                start_date="The start date must be on or before the end date",
+                end_date="The end date must be on or after the start date",
+            ))
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return "AwayDate(id={}, name={}, start_date={}, end_date={}, user={}".format(
+            self.id, self.name, self.start_date, self.end_date, self.user)

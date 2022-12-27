@@ -1,7 +1,9 @@
 from django.test import TestCase
 
 from chores import model_views, queries
-from .utils import create_tag, create_chore, create_random_user
+
+from .utils import (create_away_date, create_chore, create_random_user,
+                    create_tag)
 
 
 class TestQueryChores(TestCase):
@@ -57,3 +59,23 @@ class TestQueryTags(TestCase):
         self.assertEqual(queries.query_tags(user1), [
                          model_views.Tag(tag1), model_views.Tag(tag2)])
         self.assertEqual(queries.query_tags(user2), [])
+
+
+class TestQueryAwayDates(TestCase):
+
+    def test_invalid_user(self):
+        with self.assertRaises(ValueError) as cm:
+            queries.query_away_dates(None)
+
+        self.assertEqual(str(cm.exception), "Invalid user provided")
+
+    def test_valid_user(self):
+        user1 = create_random_user()
+        user2 = create_random_user()
+
+        away_date1 = create_away_date(user1)
+        away_date2 = create_away_date(user1)
+
+        self.assertEqual(queries.query_away_dates(user1), [
+                         model_views.AwayDate(away_date1), model_views.AwayDate(away_date2)])
+        self.assertEqual(queries.query_away_dates(user2), [])

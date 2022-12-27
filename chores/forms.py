@@ -58,3 +58,13 @@ class TagFilterForm(forms.Form):
 
     def has_tags(self):
         return len(self.fields["tag"].queryset) != 0
+
+
+class AwayDateForm(forms.ModelForm):
+    class Meta:
+        model = models.AwayDate
+        fields = ["name", "start_date", "end_date"]
+        widgets = {
+            "start_date": forms.DateInput(attrs=dict(type="date")),
+            "end_date": forms.DateInput(attrs=dict(type="date")),
+        }
