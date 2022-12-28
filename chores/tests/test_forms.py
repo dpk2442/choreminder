@@ -10,7 +10,7 @@ class TestTagChoiceField(TestCase):
         user = get_user()
         tag = create_tag(user)
         field = forms.TagChoiceField(queryset=models.Tag.objects.all())
-        self.assertEquals(field.label_from_instance(tag), tag.name)
+        self.assertEqual(field.label_from_instance(tag), tag.name)
 
 
 class TestChoreForm(TestCase):

@@ -9,6 +9,7 @@ uwsgi = "*"
 
 [dev-packages]
 autopep8 = "*"
+pytest-django = "*"
 
 [requires]
 python_version = "3.10"
