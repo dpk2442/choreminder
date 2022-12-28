@@ -1,4 +1,5 @@
 import datetime
+from enum import Enum
 from typing import Generic, Optional, TypeVar
 
 from django.db.models import Model as DjangoModel
@@ -18,21 +19,71 @@ def compute_status(current_time: datetime.datetime,
                    due_duration: datetime.timedelta,
                    overdue_duration: Optional[datetime.timedelta]) -> "ChoreStatus":
     if latest_log_timestamp is None:
-        return ChoreStatus("due", None, 0)
+        return ChoreStatus(ChoreState.DUE, None, 0, None)
     else:
         next_due = latest_log_timestamp + due_duration
         if next_due > current_time:
-            return ChoreStatus("completed", "due", calculate_percentage(
-                (current_time - latest_log_timestamp) / due_duration))
+            return ChoreStatus(ChoreState.COMPLETED, ChoreState.DUE, calculate_percentage(
+                (current_time - latest_log_timestamp) / due_duration), next_due)
         elif overdue_duration is None:
-            return ChoreStatus("due", None, 0)
+            return ChoreStatus(ChoreState.DUE, None, 0, next_due)
         else:
             overdue_time = next_due + overdue_duration
             if current_time < overdue_time:
-                return ChoreStatus("due", "overdue", calculate_percentage(
-                    (current_time - next_due) / overdue_duration))
+                return ChoreStatus(ChoreState.DUE, ChoreState.OVERDUE, calculate_percentage(
+                    (current_time - next_due) / overdue_duration), next_due)
             else:
-                return ChoreStatus("overdue", None, 0)
+                return ChoreStatus(ChoreState.OVERDUE, None, 0, next_due)
+
+
+class ChoreState(Enum):
+    COMPLETED = 1
+    DUE = 2
+    OVERDUE = 3
+
+    def __str__(self):
+        match self:
+            case None:
+                return ""
+            case ChoreState.COMPLETED:
+                return "Completed"
+            case ChoreState.DUE:
+                return "Due"
+            case ChoreState.OVERDUE:
+                return "Overdue"
+
+        raise ValueError("State value is unexpected")
+
+
+class ChoreStatus(object):
+
+    def __init__(self,
+                 state: Optional[ChoreState],
+                 next_state: Optional[ChoreState],
+                 percentage: float,
+                 next_due: datetime.datetime):
+        self.state = state
+        self.next_state = next_state
+        self.percentage = percentage
+        self.next_due = next_due
+
+    def __eq__(self, other: object) -> bool:
+        return (
+            isinstance(other, ChoreStatus)
+            and other is not None
+            and self.state == other.state
+            and self.next_state == other.next_state
+            and self.percentage == other.percentage
+            and self.next_due == other.next_due
+        )
+
+    def __str__(self):
+        return "ChoreStatus(state={}, next_state={}, percentage={}, next_due={})".format(
+            self.state, self.next_state, self.percentage, self.next_due
+        )
+
+    def __repr__(self) -> str:
+        return self.__str__()
 
 
 class ModelViewBase(Generic[DjangoModelType]):
@@ -93,14 +144,15 @@ class Chore(ModelViewBase[models.Chore]):
     @property
     def weight(self):
         status = self.status
-        if status.state == "completed":
-            return status.percentage
-        elif status.state == "due":
-            return status.percentage + 100
-        elif status.state == "overdue":
-            return status.percentage + 200
-        else:
-            raise ValueError("State value is unexpected")
+        match status.state:
+            case ChoreState.COMPLETED:
+                return status.percentage
+            case ChoreState.DUE:
+                return status.percentage + 100
+            case ChoreState.OVERDUE:
+                return status.percentage + 200
+
+        raise ValueError("State value is unexpected")
 
     @property
     def tags(self):
@@ -108,12 +160,6 @@ class Chore(ModelViewBase[models.Chore]):
             self._tags = list(map(Tag, self._obj.tags.all()))
 
         return self._tags
-
-    def next_due(self) -> datetime.datetime:
-        if self.latest_log is None:
-            return None
-
-        return self.latest_log.timestamp + self._obj.due_duration
 
 
 class Log(ModelViewBase[models.Log]):
@@ -124,27 +170,6 @@ class Log(ModelViewBase[models.Log]):
     @property
     def timestamp(self):
         return self._obj.timestamp
-
-
-class ChoreStatus(object):
-
-    def __init__(self, state: Optional[str], next_state: Optional[str], percentage: float):
-        self.state = state
-        self.next_state = next_state
-        self.percentage = percentage
-
-    def __eq__(self, other: object) -> bool:
-        return (isinstance(other, ChoreStatus)
-                and other is not None
-                and self.state == other.state
-                and self.next_state == other.next_state
-                and self.percentage == other.percentage)
-
-    def __str__(self):
-        return f"ChoreStatus(state={self.state}, next_state={self.next_state}, percentage={self.percentage})"
-
-    def __repr__(self) -> str:
-        return self.__str__()
 
 
 class Tag(ModelViewBase[models.Tag]):

@@ -14,17 +14,5 @@ def format_duration(duration: timedelta):
 
 
 @register.filter(is_safe=True)
-def format_status_state(state: str):
-    if state is None:
-        return ""
-    elif state == "completed":
-        return "Completed"
-    elif state == "due":
-        return "Due"
-    elif state == "overdue":
-        return "Overdue"
-
-
-@register.filter(is_safe=True)
 def format_tag_list(tags: List[model_views.Tag]):
     return ", ".join(map(lambda tag: tag.name, tags))

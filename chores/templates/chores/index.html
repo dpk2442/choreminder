@@ -27,8 +27,8 @@
         <td>{{ chore.description }}</td>
         <td>{{ chore.tags | format_tag_list }}</td>
         <td>{{ chore.latest_log.timestamp }}</td>
-        <td>{{ chore.next_due | default:"" }}</td>
-        <td>{{ chore.status.state | format_status_state }}</td>
+        <td>{{ chore.status.next_due | default:"" }}</td>
+        <td>{{ chore.status.state }}</td>
         <td>{{ chore.weight }}</td>
         <td style="text-align: center">
             <form action="{% url "chores:log_chore" chore.id %}" method="POST">
