@@ -15,7 +15,7 @@ class ComputeStatusTest(TestCase):
     def test_no_latest_log(self):
         status = compute_status(timezone.now(), None, None, None)
         self.assertEqual(status, ChoreStatus(
-            ChoreState.DUE, None, 0, None))
+            ChoreState.DUE, None, 0, None, None))
 
     def test_completed(self):
         now = timezone.now()
@@ -25,8 +25,8 @@ class ComputeStatusTest(TestCase):
         for expected_percentage in (0, 25, 50, 75):
             status = compute_status(
                 now, last_log_timestamp, due_duration, None)
-            self.assertEqual(status, ChoreStatus(
-                ChoreState.COMPLETED, ChoreState.DUE, expected_percentage, last_log_timestamp + due_duration))
+            self.assertEqual(status, ChoreStatus(ChoreState.COMPLETED, ChoreState.DUE,
+                             expected_percentage, last_log_timestamp + due_duration, None))
             last_log_timestamp -= td(hours=6)
 
     def test_due_no_overdue(self):
@@ -38,7 +38,7 @@ class ComputeStatusTest(TestCase):
             status = compute_status(
                 now, last_log_timestamp, due_duration, None)
             self.assertEqual(status, ChoreStatus(
-                ChoreState.DUE, None, 0, last_log_timestamp + due_duration))
+                ChoreState.DUE, None, 0, last_log_timestamp + due_duration, None))
             last_log_timestamp -= td(hours=6)
 
     def test_due_with_overdue(self):
@@ -51,7 +51,10 @@ class ComputeStatusTest(TestCase):
             status = compute_status(
                 now, last_log_timestamp, due_duration, overdue_duration)
             self.assertEqual(status, ChoreStatus(
-                ChoreState.DUE, ChoreState.OVERDUE, expected_percentage, last_log_timestamp + due_duration))
+                ChoreState.DUE, ChoreState.OVERDUE, expected_percentage,
+                last_log_timestamp + due_duration,
+                last_log_timestamp + due_duration + overdue_duration
+            ))
             last_log_timestamp -= td(hours=6)
 
     def test_overdue(self):
@@ -64,7 +67,10 @@ class ComputeStatusTest(TestCase):
             status = compute_status(
                 now, last_log_timestamp, due_duration, overdue_duration)
             self.assertEqual(status, ChoreStatus(
-                ChoreState.OVERDUE, None, 0, last_log_timestamp + due_duration))
+                ChoreState.OVERDUE, None, 0,
+                last_log_timestamp + due_duration,
+                last_log_timestamp + due_duration + overdue_duration
+            ))
             last_log_timestamp -= td(hours=6)
 
 
@@ -89,13 +95,13 @@ class ChoreModelViewTest(TestCase):
         chore_view = Chore(chore)
 
         chore_view._status = ChoreStatus(
-            ChoreState.COMPLETED, None, 10, None)
+            ChoreState.COMPLETED, None, 10, None, None)
         self.assertEqual(chore_view.weight, 10)
 
         chore_view._status = ChoreStatus(
-            ChoreState.DUE, None, 10, None)
+            ChoreState.DUE, None, 10, None, None)
         self.assertEqual(chore_view.weight, 110)
 
         chore_view._status = ChoreStatus(
-            ChoreState.OVERDUE, None, 10, None)
+            ChoreState.OVERDUE, None, 10, None, None)
         self.assertEqual(chore_view.weight, 210)

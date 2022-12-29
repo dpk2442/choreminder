@@ -19,21 +19,23 @@ def compute_status(current_time: datetime.datetime,
                    due_duration: datetime.timedelta,
                    overdue_duration: Optional[datetime.timedelta]) -> "ChoreStatus":
     if latest_log_timestamp is None:
-        return ChoreStatus(ChoreState.DUE, None, 0, None)
+        return ChoreStatus(ChoreState.DUE, None, 0, None, None)
     else:
         next_due = latest_log_timestamp + due_duration
+        next_overdue = next_due + overdue_duration if overdue_duration is not None else None
         if next_due > current_time:
-            return ChoreStatus(ChoreState.COMPLETED, ChoreState.DUE, calculate_percentage(
-                (current_time - latest_log_timestamp) / due_duration), next_due)
-        elif overdue_duration is None:
-            return ChoreStatus(ChoreState.DUE, None, 0, next_due)
+            percentage = calculate_percentage(
+                (current_time - latest_log_timestamp) / due_duration)
+            return ChoreStatus(ChoreState.COMPLETED, ChoreState.DUE, percentage, next_due, next_overdue)
+        elif next_overdue is None:
+            return ChoreStatus(ChoreState.DUE, None, 0, next_due, next_overdue)
         else:
-            overdue_time = next_due + overdue_duration
-            if current_time < overdue_time:
-                return ChoreStatus(ChoreState.DUE, ChoreState.OVERDUE, calculate_percentage(
-                    (current_time - next_due) / overdue_duration), next_due)
+            if current_time < next_overdue:
+                percentage = calculate_percentage(
+                    (current_time - next_due) / overdue_duration)
+                return ChoreStatus(ChoreState.DUE, ChoreState.OVERDUE, percentage, next_due, next_overdue)
             else:
-                return ChoreStatus(ChoreState.OVERDUE, None, 0, next_due)
+                return ChoreStatus(ChoreState.OVERDUE, None, 0, next_due, next_overdue)
 
 
 class ChoreState(Enum):
@@ -61,11 +63,13 @@ class ChoreStatus(object):
                  state: Optional[ChoreState],
                  next_state: Optional[ChoreState],
                  percentage: float,
-                 next_due: datetime.datetime):
+                 next_due: datetime.datetime,
+                 next_overdue: Optional[datetime.datetime]):
         self.state = state
         self.next_state = next_state
         self.percentage = percentage
         self.next_due = next_due
+        self.next_overdue = next_overdue
 
     def __eq__(self, other: object) -> bool:
         return (
@@ -75,11 +79,12 @@ class ChoreStatus(object):
             and self.next_state == other.next_state
             and self.percentage == other.percentage
             and self.next_due == other.next_due
+            and self.next_overdue == other.next_overdue
         )
 
     def __str__(self):
-        return "ChoreStatus(state={}, next_state={}, percentage={}, next_due={})".format(
-            self.state, self.next_state, self.percentage, self.next_due
+        return "ChoreStatus(state={}, next_state={}, percentage={}, next_due={}, next_overdue={})".format(
+            self.state, self.next_state, self.percentage, self.next_due, self.next_overdue
         )
 
     def __repr__(self) -> str:
