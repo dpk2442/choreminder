@@ -41,7 +41,7 @@ class TestChoreValidation(TestCase):
 class TestAwayDateValidation(TestCase):
 
     def test_start_less_than_end(self):
-        start_date = timezone.now()
+        start_date = timezone.now().date()
         end_date = start_date + td(days=1)
 
         away_date = AwayDate(
@@ -50,7 +50,7 @@ class TestAwayDateValidation(TestCase):
         away_date.clean()
 
     def test_start_equals_end(self):
-        start_date = timezone.now()
+        start_date = timezone.now().date()
 
         away_date = AwayDate(
             name="name", start_date=start_date, end_date=start_date)
@@ -58,7 +58,7 @@ class TestAwayDateValidation(TestCase):
         away_date.clean()
 
     def test_start_greater_than_end(self):
-        start_date = timezone.now()
+        start_date = timezone.now().date()
         end_date = start_date - td(days=1)
 
         away_date = AwayDate(
@@ -76,3 +76,47 @@ class TestAwayDateValidation(TestCase):
         away_date = AwayDate(name="name", start_date=None, end_date=None)
 
         away_date.clean()
+
+
+class TestAwayDateContainsDate(TestCase):
+
+    def test_date_before(self):
+        now = timezone.now()
+        start_date = now.date()
+        end_date = start_date + td(days=1)
+        test_date = now - td(days=1)
+
+        # test date range
+        self.assertFalse(AwayDate(start_date=start_date,
+                         end_date=end_date).contains_date(test_date))
+
+        # test single date away
+        self.assertFalse(AwayDate(start_date=start_date,
+                         end_date=start_date).contains_date(test_date))
+
+    def test_date_after(self):
+        now = timezone.now()
+        start_date = now.date()
+        end_date = start_date + td(days=1)
+        test_date = now + td(days=2)
+
+        # test date range
+        self.assertFalse(AwayDate(start_date=start_date,
+                         end_date=end_date).contains_date(test_date))
+
+        # test single date away
+        self.assertFalse(AwayDate(start_date=start_date,
+                         end_date=start_date).contains_date(test_date))
+
+    def test_date_during(self):
+        now = timezone.now()
+        start_date = now.date()
+        end_date = start_date + td(days=2)
+
+        # test date range
+        self.assertTrue(AwayDate(start_date=start_date,
+                                 end_date=end_date).contains_date(now + td(days=1)))
+
+        # test single date away
+        self.assertTrue(AwayDate(start_date=start_date,
+                                 end_date=start_date).contains_date(now))

@@ -1,6 +1,7 @@
 import datetime
 import random
 import string
+from typing import Optional
 
 from django.contrib.auth.models import User
 from django.utils import timezone
@@ -51,9 +52,11 @@ def create_tag(user: User) -> models.Tag:
     )
 
 
-def create_away_date(user: User) -> models.AwayDate:
-    start_date = timezone.now().today()
-    end_date = start_date + datetime.timedelta(days=1)
+def create_away_date(user: User,
+                     start_date: Optional[datetime.datetime] = None,
+                     end_date: Optional[datetime.datetime] = None) -> models.AwayDate:
+    start_date = start_date or timezone.now().today()
+    end_date = end_date or start_date + datetime.timedelta(days=1)
 
     return models.AwayDate.objects.create(
         name=create_random_string(),

@@ -6,6 +6,7 @@ from django.db.models import Model as DjangoModel
 from django.utils import timezone
 
 from chores import models
+from chores.type_helpers import UserType
 
 DjangoModelType = TypeVar("DjangoModelType", bound=DjangoModel)
 
@@ -14,25 +15,47 @@ def calculate_percentage(val):
     return round(100 * val, 2)
 
 
-def compute_status(current_time: datetime.datetime,
+def add_delta_with_away_dates(user: UserType,
+                              start_time: datetime.datetime,
+                              delta_time: datetime.timedelta) -> datetime.datetime:
+    away_dates = models.AwayDate.objects.filter(
+        user=user, end_date__gte=start_time).order_by("start_date")
+
+    if len(away_dates) == 0:
+        return start_time + delta_time
+
+    result_time = start_time
+    days_to_add = delta_time.days
+    while days_to_add > 0:
+        result_time += datetime.timedelta(days=1)
+        if not any(map(lambda ad: ad.contains_date(result_time), away_dates)):
+            days_to_add -= 1
+
+    return result_time
+
+
+def compute_status(user: UserType,
+                   current_time: datetime.datetime,
                    latest_log_timestamp: Optional[datetime.datetime],
                    due_duration: datetime.timedelta,
                    overdue_duration: Optional[datetime.timedelta]) -> "ChoreStatus":
     if latest_log_timestamp is None:
         return ChoreStatus(ChoreState.DUE, None, 0, None, None)
     else:
-        next_due = latest_log_timestamp + due_duration
-        next_overdue = next_due + overdue_duration if overdue_duration is not None else None
+        next_due = add_delta_with_away_dates(
+            user, latest_log_timestamp, due_duration)
+        next_overdue = add_delta_with_away_dates(
+            user, next_due, overdue_duration) if overdue_duration is not None else None
         if next_due > current_time:
             percentage = calculate_percentage(
-                (current_time - latest_log_timestamp) / due_duration)
+                (current_time - latest_log_timestamp) / (next_due - latest_log_timestamp))
             return ChoreStatus(ChoreState.COMPLETED, ChoreState.DUE, percentage, next_due, next_overdue)
         elif next_overdue is None:
             return ChoreStatus(ChoreState.DUE, None, 0, next_due, next_overdue)
         else:
             if current_time < next_overdue:
                 percentage = calculate_percentage(
-                    (current_time - next_due) / overdue_duration)
+                    (current_time - next_due) / (next_overdue - next_due))
                 return ChoreStatus(ChoreState.DUE, ChoreState.OVERDUE, percentage, next_due, next_overdue)
             else:
                 return ChoreStatus(ChoreState.OVERDUE, None, 0, next_due, next_overdue)
@@ -139,7 +162,8 @@ class Chore(ModelViewBase[models.Chore]):
     @property
     def status(self):
         if self._status is None:
-            self._status = compute_status(timezone.now(),
+            self._status = compute_status(self._obj.user,
+                                          timezone.now(),
                                           self.latest_log and self.latest_log.timestamp or None,
                                           self._obj.due_duration,
                                           self._obj.overdue_duration)

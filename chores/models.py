@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -65,6 +67,10 @@ class AwayDate(models.Model):
     end_date = models.DateField("End Date")
     user = models.ForeignKey(
         get_user_model(), on_delete=models.SET_NULL, null=True)
+
+    def contains_date(self, date: datetime.datetime) -> bool:
+        date = date.date()
+        return self.start_date <= date and date <= self.end_date
 
     def clean(self):
         if self.start_date is not None and self.end_date is not None and self.start_date > self.end_date:
