@@ -34,8 +34,8 @@ class ChoreForm(forms.ModelForm):
             "overdue_duration": "Overdue Duration (Optional)"
         }
         help_texts = {
-            "due_duration": "The amount of time since last completion before a task is considered due.",
-            "overdue_duration": "The amount of time after a task is due before a it is considered overdue.",
+            "due_duration": "The number of days since last completion before a task is considered due.",
+            "overdue_duration": "The number of days after a task is due before a it is considered overdue.",
         }
 
     def __init__(self, user: UserType, *args, **kwargs):

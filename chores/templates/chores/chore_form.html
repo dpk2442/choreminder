@@ -24,10 +24,6 @@
         <fieldset>
             {{ form.due_duration.label_tag }}
             <p>{{ form.due_duration.help_text | safe }}</p>
-            <p>
-                This field should be formatted as
-                <code>&lt;days&gt; &lt;hours&gt;:&lt;minutes&gt;:&lt;seconds&gt;</code>.
-            </p>
             {{ form.due_duration }}
             {{ form.due_duration.errors }}
         </fieldset>
@@ -35,10 +31,6 @@
         <fieldset>
             {{ form.overdue_duration.label_tag }}
             <p>{{ form.overdue_duration.help_text | safe }}</p>
-            <p>
-                This field should be formatted as
-                <code>&lt;days&gt; &lt;hours&gt;:&lt;minutes&gt;:&lt;seconds&gt;</code>.
-            </p>
             {{ form.overdue_duration }}
             {{ form.overdue_duration.errors }}
         </fieldset>

@@ -4,7 +4,38 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils import timezone
 
-from chores.models import AwayDate
+from chores.models import AwayDate, Chore
+
+
+class TestChoreValidation(TestCase):
+
+    def test_due_duration(self):
+        Chore(due_duration=td(days=1)).clean()
+
+        with self.assertRaises(ValidationError) as cm:
+            Chore(due_duration=td(microseconds=99999999999)).clean()
+
+        self.assertIn(
+            "'due_duration': ['The due duration must be specified in days']", str(cm.exception))
+
+    def test_overdue_duration(self):
+        Chore(overdue_duration=td(days=1)).clean()
+
+        with self.assertRaises(ValidationError) as cm:
+            Chore(overdue_duration=td(microseconds=99999999999)).clean()
+
+        self.assertIn(
+            "'overdue_duration': ['The overdue duration must be specified in days']", str(cm.exception))
+
+    def test_both_durations_invalid(self):
+        with self.assertRaises(ValidationError) as cm:
+            Chore(due_duration=td(microseconds=99999999999),
+                  overdue_duration=td(microseconds=99999999999)).clean()
+
+        self.assertIn(
+            "'due_duration': ['The due duration must be specified in days']", str(cm.exception))
+        self.assertIn(
+            "'overdue_duration': ['The overdue duration must be specified in days']", str(cm.exception))
 
 
 class TestAwayDateValidation(TestCase):

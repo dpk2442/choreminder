@@ -14,6 +14,24 @@ class Chore(models.Model):
         "Tag", blank=True)
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
 
+    def clean(self):
+        errors = {}
+
+        if self.due_duration is not None and \
+                (self.due_duration.seconds != 0 or self.due_duration.microseconds != 0):
+            errors["due_duration"] = "The due duration must be specified in days"
+
+        if self.overdue_duration is not None and \
+                (self.overdue_duration.seconds != 0 or self.overdue_duration.microseconds != 0):
+            errors["overdue_duration"] = "The overdue duration must be specified in days"
+
+        if errors:
+            raise ValidationError(errors)
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return ("Chore("
                 "id={}, name={}, description={}, "
