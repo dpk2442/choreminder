@@ -14,10 +14,10 @@ def index(request: HttpRequest):
     tag_id = (tag_form.cleaned_data["tag"].id
               if tag_form.is_valid() and tag_form.cleaned_data["tag"] is not None
               else None)
-    chores = actions.get_sorted_chores(request.user, tag_id)
+    chore_groups = actions.get_grouped_sorted_chores(request.user, tag_id)
     return render(request, "chores/index.html", dict(
         title="Chores",
-        chores=chores,
+        chore_groups=chore_groups,
         tag_form=tag_form,
     ))
 

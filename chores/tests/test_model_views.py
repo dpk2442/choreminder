@@ -42,7 +42,8 @@ class TestAddDeltaWithAwayDates(TestCase):
         user = get_user()
 
         now = timezone.now()
-        _ = create_away_date(user, now + td(days=1), now + td(days=2))
+        _ = create_away_date(
+            user, now.date() + td(days=1), now.date() + td(days=2))
 
         result = add_delta_with_away_dates(user, now, td(days=2))
         self.assertEqual(result, now + td(days=4))
@@ -51,7 +52,8 @@ class TestAddDeltaWithAwayDates(TestCase):
         user = get_user()
 
         now = timezone.now()
-        _ = create_away_date(user, now - td(days=1), now + td(days=1))
+        _ = create_away_date(user, now.date() - td(days=1),
+                             now.date() + td(days=1))
 
         result = add_delta_with_away_dates(user, now, td(days=2))
         self.assertEqual(result, now + td(days=3))
@@ -60,9 +62,12 @@ class TestAddDeltaWithAwayDates(TestCase):
         user = get_user()
 
         now = timezone.now()
-        _ = create_away_date(user, now + td(days=1), now + td(days=3))
-        _ = create_away_date(user, now + td(days=2), now + td(days=4))
-        _ = create_away_date(user, now + td(days=6), now + td(days=8))
+        _ = create_away_date(user, now.date() + td(days=1),
+                             now.date() + td(days=3))
+        _ = create_away_date(user, now.date() + td(days=2),
+                             now.date() + td(days=4))
+        _ = create_away_date(user, now.date() + td(days=6),
+                             now.date() + td(days=8))
 
         result = add_delta_with_away_dates(user, now, td(days=3))
         self.assertEqual(result, now + td(days=10))

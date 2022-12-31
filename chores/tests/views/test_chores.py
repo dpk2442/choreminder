@@ -1,4 +1,6 @@
 import datetime
+from collections import OrderedDict
+from unittest import skip
 
 from django.conf import settings
 from django.template import defaultfilters
@@ -6,8 +8,16 @@ from django.urls import reverse
 from django.utils import timezone
 
 from chores import forms, model_views, models
+
 from ..utils import create_random_string
 from .utils import AuthenticatedTest
+
+
+def build_chore_groups(pending_list, completed_list):
+    return OrderedDict((
+        ("Pending", pending_list),
+        ("Completed", completed_list),
+    ))
 
 
 class ChoreIndexViewTests(AuthenticatedTest):
@@ -15,7 +25,8 @@ class ChoreIndexViewTests(AuthenticatedTest):
     def test_no_chores(self):
         response = self.client.get(reverse("chores:index"))
         self.assertContains(response, "No chores to display.")
-        self.assertEqual(response.context["chores"], [])
+        self.assertEqual(
+            response.context["chore_groups"], build_chore_groups([], []))
 
     def test_some_chores(self):
         chore1 = self.create_chore_in_db()
@@ -23,15 +34,17 @@ class ChoreIndexViewTests(AuthenticatedTest):
         response = self.client.get(reverse("chores:index"))
         self.assertContains(response, chore1.name)
         self.assertContains(response, chore2.name)
-        self.assertEqual(response.context["chores"], [
-                         model_views.Chore(chore1), model_views.Chore(chore2)])
+        self.assertEqual(response.context["chore_groups"], build_chore_groups(
+            [model_views.Chore(chore1), model_views.Chore(chore2)], []))
 
         # test user 2 cannot list
         self.client.force_login(self.user2)
         response = self.client.get(reverse("chores:index"))
         self.assertContains(response, "No chores to display.")
-        self.assertEqual(response.context["chores"], [])
+        self.assertEqual(
+            response.context["chore_groups"], build_chore_groups([], []))
 
+    @skip("Latest log is currently not visible")
     def test_shows_latest_log(self):
         chore = self.create_chore_in_db()
         log = self.create_log_in_db(chore)
@@ -52,8 +65,8 @@ class ChoreIndexViewTests(AuthenticatedTest):
         tag2 = self.create_tag_in_db()
         _ = self.create_chore_in_db(tags=[tag1, tag2])
         response = self.client.get(reverse("chores:index"))
-        self.assertContains(response, "Tags")
-        self.assertContains(response, "{}, {}".format(tag1.name, tag2.name))
+        self.assertContains(response, tag1.name)
+        self.assertContains(response, tag2.name)
 
     def test_tag_filter(self):
         tag1 = self.create_tag_in_db()

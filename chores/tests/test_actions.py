@@ -1,15 +1,17 @@
+from collections import OrderedDict
 from datetime import timedelta as td
 
 from django.test import TestCase
 from django.utils import timezone
 
 from chores import actions, model_views
+
 from .utils import create_chore, create_log, get_user
 
 
-class TestGetSortedChores(TestCase):
+class TestGetGroupedSortedChores(TestCase):
 
-    def test_sorted_properly(self):
+    def test_grouped_sorted_properly(self):
         now = timezone.now()
         user = get_user()
 
@@ -24,5 +26,8 @@ class TestGetSortedChores(TestCase):
 
         chore_no_log = create_chore(user)
 
-        self.assertEqual(actions.get_sorted_chores(user, None), list(map(model_views.Chore, [
-                         chore_overdue, chore_due, chore_no_log, chore_completed])))
+        self.assertEqual(actions.get_grouped_sorted_chores(user, None), OrderedDict((
+            ("Pending", [model_views.Chore(chore_overdue), model_views.Chore(
+                chore_due), model_views.Chore(chore_no_log)]),
+            ("Completed", [model_views.Chore(chore_completed)]),
+        )))
