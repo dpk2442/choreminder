@@ -1,32 +1,38 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ title }} | ChoreMinder</title>
-    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <link rel="shorcut icon" href="{% static 'chores/img/favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'chores/css/main.css' %}">
 </head>
 <body>
     <header>
-        <h1><a href="{% url "chores:index" %}">ChoreMinder</a></h1>
+        <a href="{% url "chores:index" %}">
+            {% include "chores/img/logo_green.svg" %}
+            ChoreMinder
+        </a>
         {% if user.is_authenticated %}
-            <p>
-                Welcome, {{ user.first_name|default:user.username }}.
-                <a href="{% url "logout" %}">Logout</a>
-                <p><a href="{% url "chores:list_tags" %}">Tags</a></p>
-                <p><a href="{% url "chores:list_away_dates" %}">Away Dates</a></p>
-                {% if user.is_superuser %}
-                <p>
-                    <a href="{% url "admin:index" %}" target="_blank">
-                        Admin
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-1" style="width: 0.8em; height: 0.8em;">
-                            <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
-                            <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
-                        </svg>
-                    </a>
-                </p>
-                {% endif %}
-            </p>
+            <nav>
+                <ul>
+                    {% if user.is_superuser %}
+                    <li>
+                        <a href="{% url "admin:index" %}" target="_blank">
+                            Admin
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="ml-1" style="width: 0.8em; height: 0.8em;">
+                                <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" />
+                                <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
+                            </svg>
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li><a href="{% url "chores:list_away_dates" %}">Away Dates</a></li>
+                    <li><a href="{% url "chores:list_tags" %}">Tags</a></li>
+                    <li><a href="{% url "logout" %}">Logout</a></li>
+                </ul>
+            </nav>
         {% endif %}
     </header>
     <main>
