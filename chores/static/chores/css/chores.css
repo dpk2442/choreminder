@@ -1,0 +1,88 @@
+div.controls {
+    display: flex;
+}
+
+div.controls>form {
+    flex-grow: 1;
+}
+
+details {
+    margin: 1em 0;
+    padding: 0 1em;
+}
+
+details[open] summary {
+    padding-bottom: 0.5em;
+    border-bottom: 1px solid #687d68;
+}
+
+details summary h2 {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+}
+
+details>ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+details>ul>li {
+    display: flex;
+    margin: 1em 0;
+    padding: 1em;
+    border-radius: 1em;
+    background: #f8f8f8;
+    box-shadow: 0 0 0.1em #bbb;
+}
+
+details div.left {
+    flex-grow: 1;
+}
+
+details>ul>li h3 {
+    margin: 0 0 0.5em;
+}
+
+details ul.tag-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.8em;
+}
+
+details ul.tag-list>li {
+    display: inline;
+    padding: 0.4em 0.6em;
+    border-radius: 1em;
+    background: #008000;
+    color: white;
+}
+
+details p.footer {
+    font-size: 0.8em;
+    margin-bottom: 0;
+}
+
+details div.right {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+details div.right>form {
+    flex-grow: 1;
+}
+
+details div.right>ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.8em;
+}
+
+details div.right>ul>li {
+    flex-grow: 1;
+}

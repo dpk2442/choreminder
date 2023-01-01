@@ -1,13 +1,21 @@
 {% extends "chores/base.html" %}
+{% load static %}
 {% load chores_filters %}
-{% block content %}
 
-{% if tag_form.has_tags %}
-<form method="get" action="">
-    {{ tag_form.tag }}
-    <input type="submit" value="Filter">
-</form>
-{% endif %}
+{% block header %}
+<link rel="stylesheet" href="{% static 'chores/css/chores.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="controls">
+    {% if tag_form.has_tags %}
+    <form method="get" action="">
+        {{ tag_form.tag }}
+        <input type="submit" value="Filter">
+    </form>
+    {% endif %}
+    <a href="{% url "chores:add_chore" %}">Add Chore</a>
+</div>
 
 {% for group_name, chores in chore_groups.items %}
 <details{% if forloop.counter == 1 %} open{% endif %}>
@@ -16,25 +24,30 @@
     <ul>
         {% for chore in chores %}
         <li>
-            <h3>{{ chore.name }}</h3>
-            {% if chore.tags %}
-            <ul>
-                {% for tag in chore.tags %}
-                <li>{{ tag.name }}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-            <p>{{ chore.description }}</p>
-            <form action="{% url "chores:log_chore" chore.id %}" method="POST">
-                {% csrf_token %}
-                <input type="submit" value="Mark Done">
-            </form>
-            <p>
-                Next Due: {{ chore.status.next_due | default:"" }}
-                |
-                <a href="{% url "chores:edit_chore" chore.id %}">Edit</a>
-                <a href="{% url "chores:delete_chore" chore.id %}">Delete</a>
-            </p>
+            <div class="left">
+                <h3>{{ chore.name }}</h3>
+                {% if chore.tags %}
+                <ul class="tag-list">
+                    {% for tag in chore.tags %}
+                    <li>{{ tag.name }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                <p>{{ chore.description }}</p>
+                <p class="footer">
+                    Next Due: {{ chore.status.next_due | default:"" }}
+                </p>
+            </div>
+            <div class="right">
+                <form action="{% url "chores:log_chore" chore.id %}" method="POST">
+                    {% csrf_token %}
+                    <input type="submit" value="Mark Done">
+                </form>
+                <ul>
+                    <li><a href="{% url "chores:edit_chore" chore.id %}">Edit</a></li>
+                    <li><a href="{% url "chores:delete_chore" chore.id %}">Delete</a></li>
+                </ul>
+            </div>
         </li>
         {% endfor %}
     </ul>
@@ -46,7 +59,4 @@
 <p>No chores to display.</p>
 {% endfor %}
 
-<p>
-    <a href="{% url "chores:add_chore" %}">Add Chore</a>
-</p>
 {% endblock %}
