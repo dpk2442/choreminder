@@ -1,5 +1,8 @@
 {% extends "chores/base.html" %}
 {% block content %}
+<p class="right">
+    <a class="button" href="{% url "chores:add_tag" %}">Add tag</a>
+</p>
 {% if tags %}
 <ul>
     {% for tag in tags %}
@@ -13,7 +16,4 @@
 {% else %}
 <p>No tags to display.</p>
 {% endif %}
-<p>
-    <a href="{% url "chores:add_tag" %}">Add tag</a>
-</p>
 {% endblock %}

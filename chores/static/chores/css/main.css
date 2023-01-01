@@ -57,6 +57,16 @@ input {
     /* margin-bottom: 0.5rem; */
 }
 
+
+/********************
+ ** Utility Styles **
+ ********************/
+
+.right {
+    text-align: right;
+}
+
+
 /*******************
  ** Header Styles **
  *******************/

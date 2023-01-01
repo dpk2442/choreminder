@@ -1,5 +1,8 @@
 {% extends "chores/base.html" %}
 {% block content %}
+<p class="right">
+    <a class="button" href="{% url "chores:add_away_date" %}">Add away date</a>
+</p>
 {% if away_dates %}
 <ul>
     {% for away_date in away_dates %}
@@ -19,7 +22,4 @@
 {% else %}
 <p>No away dates to display.</p>
 {% endif %}
-<p>
-    <a href="{% url "chores:add_away_date" %}">Add away date</a>
-</p>
 {% endblock %}
