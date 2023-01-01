@@ -14,7 +14,7 @@
         <input type="submit" value="Filter">
     </form>
     {% endif %}
-    <a href="{% url "chores:add_chore" %}">Add Chore</a>
+    <a class="button" href="{% url "chores:add_chore" %}">Add Chore</a>
 </div>
 
 {% for group_name, chores in chore_groups.items %}
