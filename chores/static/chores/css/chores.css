@@ -13,7 +13,7 @@ details {
 
 details[open] summary {
     padding-bottom: 0.5em;
-    border-bottom: 1px solid #687d68;
+    border-bottom: 1px solid var(--section-border-bottom-color);
 }
 
 details summary h2 {
@@ -33,8 +33,8 @@ details>ul>li {
     margin: 1em 0;
     padding: 1em;
     border-radius: 1em;
-    background: #f8f8f8;
-    box-shadow: 0 0 0.1em #bbb;
+    background: var(--chore-card-background-color);
+    box-shadow: 0 0 0.1em var(--chore-card-box-shadow-color);
 }
 
 details div.left {
@@ -56,8 +56,8 @@ details ul.tag-list>li {
     display: inline;
     padding: 0.4em 0.6em;
     border-radius: 1em;
-    background: #ecf4e1;
-    color: #317029;
+    background: var(--chore-card-tag-background-color);
+    color: var(--chore-card-tag-color);
 }
 
 details p.footer {

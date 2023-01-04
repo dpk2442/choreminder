@@ -1,3 +1,26 @@
+/*********************
+ ** Style Variables **
+ *********************/
+
+:root {
+    /* Generic Colors */
+    --link-color: #004000;
+    --link-hover-color: #008500;
+    --button-background-color: #008000;
+    --button-color: #fff;
+    --button-hover-background-color: #00b300;
+    --form-fieldset-border-color: #687d68;
+    --form-input-border-color: #000;
+    --section-border-bottom-color: #687d68;
+
+    /* Chore Colors */
+    --chore-card-background-color: #f8f8f8;
+    --chore-card-box-shadow-color: #bbb;
+    --chore-card-tag-background-color: #ecf4e1;
+    --chore-card-tag-color: #317029;
+}
+
+
 /********************
  ** Element Styles **
  ********************/
@@ -9,11 +32,11 @@ body {
 }
 
 a {
-    color: #004000;
+    color: var(--link-color);
 }
 
 a:hover {
-    filter: brightness(2);
+    color: var(--link-hover-color);
 }
 
 input[type="submit"],
@@ -22,15 +45,15 @@ input[type="submit"],
     border: none;
     border-radius: 0.5em;
     font-size: 1rem;
-    background-color: #008000;
-    color: #fff;
+    background-color: var(--button-background-color);
+    color: var(--button-color);
     padding: 0.5em 0.8em;
     text-decoration: none;
 }
 
 input[type="submit"]:hover,
 .button:hover {
-    filter: brightness(1.4);
+    background-color: var(--button-hover-background-color);
     cursor: pointer;
 }
 
@@ -39,7 +62,7 @@ label {
 }
 
 fieldset {
-    border: 1px solid #687d68;
+    border: 1px solid var(--form-fieldset-border-color);
     padding: 1em;
     border-radius: 1em;
     margin-bottom: 1em;
@@ -50,7 +73,7 @@ select,
 input {
     display: inline-block;
     border-radius: 0.5em;
-    border: 1px solid black;
+    border: 1px solid var(--form-input-border-color);
     box-shadow: none;
     max-width: 100%;
     padding: 0.5em;
@@ -79,7 +102,7 @@ input {
 header {
     display: flex;
     min-height: 3em;
-    border-bottom: 1px solid #687d68;
+    border-bottom: 1px solid var(--section-border-bottom-color);
 }
 
 header a {
