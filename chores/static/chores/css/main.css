@@ -4,6 +4,8 @@
 
 :root {
     /* Generic Colors */
+    --body-background: initial;
+    --body-color: initial;
     --link-color: #004000;
     --link-hover-color: #008500;
     --button-background-color: #008000;
@@ -21,11 +23,42 @@
 }
 
 
+/*************************
+ ** Dark Mode Variables **
+ *************************/
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        color-scheme: dark;
+
+        /* Generic Colors */
+        --body-background: #333;
+        --body-color: #ccc;
+        --link-color: #00fa00;
+        --link-hover-color: #80ff80;
+        --button-background-color: #008000;
+        --button-color: #fff;
+        --button-hover-background-color: #00b300;
+        --form-fieldset-border-color: #808080;
+        --form-input-border-color: #666;
+        --section-border-bottom-color: #808080;
+
+        /* Chore Colors */
+        --chore-card-background-color: #404040;
+        --chore-card-box-shadow-color: #666666;
+        --chore-card-tag-background-color: #526f2a;
+        --chore-card-tag-color: #ebf3e2;
+    }
+}
+
+
 /********************
  ** Element Styles **
  ********************/
 
 body {
+    background: var(--body-background);
+    color: var(--body-color);
     max-width: 900px;
     margin: 0 auto;
     padding: 0 1em;
@@ -33,6 +66,7 @@ body {
 
 a {
     color: var(--link-color);
+    transition: color 0.15s ease-in-out;
 }
 
 a:hover {
@@ -112,7 +146,6 @@ header a {
     text-decoration: none;
     height: 3rem;
     line-height: 3rem;
-    transition: filter 0.2s ease-in-out;
 }
 
 header>a {
