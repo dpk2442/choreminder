@@ -12,6 +12,9 @@
     <form method="get" action="">
         {{ tag_form.tag }}
         <input type="submit" value="Filter">
+        {% if tag_id %}
+        <a class="button" href="{% url "chores:index" %}">Clear Filter</a>
+        {% endif %}
     </form>
     {% endif %}
     <a class="button" href="{% url "chores:add_chore" %}">Add Chore</a>

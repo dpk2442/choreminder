@@ -22,6 +22,7 @@ def index(request: HttpRequest):
         title="Chores",
         chore_groups=chore_groups,
         tag_form=tag_form,
+        tag_id=tag_id,
     ))
 
 

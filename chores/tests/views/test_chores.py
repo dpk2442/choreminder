@@ -90,6 +90,18 @@ class ChoreIndexViewTests(AuthenticatedTest):
         response = self.client.get(reverse("chores:index"))
         self.assertContains(response, "Never Completed")
 
+    def test_clear_filters_rendered_only_when_filtering(self):
+        tag = self.create_tag_in_db()
+        _ = self.create_chore_in_db()
+
+        response = self.client.get(reverse("chores:index"))
+        self.assertNotContains(
+            response, '<a class="button" href="/">Clear Filter</a>')
+
+        response = self.client.get(f"{reverse('chores:index')}?tag={tag.id}")
+        self.assertContains(
+            response, '<a class="button" href="/">Clear Filter</a>')
+
 
 class ChoreAddViewTests(AuthenticatedTest):
 
