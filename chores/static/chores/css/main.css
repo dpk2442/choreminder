@@ -5,7 +5,7 @@
 body {
     max-width: 900px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 1em;
 }
 
 a {
@@ -23,7 +23,7 @@ input[type="submit"],
     border-radius: 0.5em;
     font-size: 1rem;
     background-color: #008000;
-    color: white;
+    color: #fff;
     padding: 0.5em 0.8em;
     text-decoration: none;
 }
@@ -54,7 +54,6 @@ input {
     box-shadow: none;
     max-width: 100%;
     padding: 0.5em;
-    /* margin-bottom: 0.5rem; */
 }
 
 
