@@ -1,6 +1,9 @@
+import urllib.parse
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404, redirect, render, resolve_url
+from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_GET, require_POST
 
@@ -78,6 +81,14 @@ def log_chore(request: HttpRequest, chore_id: int):
     chore = get_object_or_404(models.Chore, pk=chore_id, user=request.user)
     models.Log.objects.create(timestamp=timezone.now(),
                               chore=chore, user=request.user)
+
+    referer_header = request.headers.get("Referer")
+    if referer_header is not None:
+        referer_url = urllib.parse.urlparse(referer_header)
+        referer_qa = urllib.parse.parse_qs(referer_url.query)
+        if "tag" in referer_qa:
+            return redirect(f"{reverse('chores:index')}?tag={referer_qa['tag'][0]}")
+
     return redirect("chores:index")
 
 

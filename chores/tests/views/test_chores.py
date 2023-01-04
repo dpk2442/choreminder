@@ -284,3 +284,15 @@ class ChoreLogViewTests(AuthenticatedTest):
             reverse("chores:log_chore", args=(chore.id,)))
         self.assertRedirects(response, reverse("chores:index"))
         self.assertEqual(chore.log_set.count(), 1)
+
+    def test_redirects_using_referer(self):
+        chore = self.create_chore_in_db()
+        response = self.client.post(
+            reverse("chores:log_chore", args=(chore.id,)), HTTP_REFERER="http://example.com/path/?tag=1")
+        self.assertRedirects(response, f"{reverse('chores:index')}?tag=1")
+
+    def test_ignores_empty_tag_query(self):
+        chore = self.create_chore_in_db()
+        response = self.client.post(
+            reverse("chores:log_chore", args=(chore.id,)), HTTP_REFERER="/?tag=")
+        self.assertRedirects(response, reverse("chores:index"))
