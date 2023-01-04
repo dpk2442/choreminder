@@ -71,9 +71,15 @@ input {
  ** Header Styles **
  *******************/
 
+@media only screen and (max-width: 720px) {
+    header {
+        flex-direction: column;
+    }
+}
+
 header {
     display: flex;
-    height: 3em;
+    min-height: 3em;
     border-bottom: 1px solid #687d68;
 }
 
@@ -102,6 +108,7 @@ header nav ul {
     height: 3em;
     margin: 0;
     padding: 0;
+    text-align: right;
 }
 
 header nav ul li {
