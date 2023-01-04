@@ -49,12 +49,14 @@ input[type="submit"],
     color: var(--button-color);
     padding: 0.5em 0.8em;
     text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
 }
 
 input[type="submit"]:hover,
 .button:hover {
     background-color: var(--button-hover-background-color);
-    cursor: pointer;
+    color: var(--button-color);
 }
 
 label {
