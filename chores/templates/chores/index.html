@@ -35,7 +35,7 @@
                 {% endif %}
                 <p>{{ chore.description }}</p>
                 <p class="footer">
-                    Next Due: {{ chore.status.next_due | default:"" }}
+                    Next Due: {{ chore.status.next_due | default:"Never Completed" }}
                 </p>
             </div>
             <div class="right">

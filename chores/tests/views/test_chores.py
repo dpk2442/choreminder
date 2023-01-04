@@ -1,6 +1,5 @@
 import datetime
 from collections import OrderedDict
-from unittest import skip
 
 from django.conf import settings
 from django.template import defaultfilters
@@ -44,14 +43,6 @@ class ChoreIndexViewTests(AuthenticatedTest):
         self.assertEqual(
             response.context["chore_groups"], build_chore_groups([], []))
 
-    @skip("Latest log is currently not visible")
-    def test_shows_latest_log(self):
-        chore = self.create_chore_in_db()
-        log = self.create_log_in_db(chore)
-        response = self.client.get(reverse("chores:index"))
-        self.assertContains(response, defaultfilters.date(
-            timezone.localtime(log.timestamp), settings.DATETIME_FORMAT))
-
     def test_shows_next_due_and_status(self):
         chore = self.create_chore_in_db()
         log = self.create_log_in_db(chore)
@@ -93,6 +84,11 @@ class ChoreIndexViewTests(AuthenticatedTest):
         self.assertContains(response, chore2.name)
         self.assertContains(response, chore3.name)
         self.assertNotContains(response, chore4.name)
+
+    def test_chore_with_no_log_renders_not_completed(self):
+        _ = self.create_chore_in_db()
+        response = self.client.get(reverse("chores:index"))
+        self.assertContains(response, "Never Completed")
 
 
 class ChoreAddViewTests(AuthenticatedTest):
