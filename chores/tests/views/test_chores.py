@@ -102,6 +102,24 @@ class ChoreIndexViewTests(AuthenticatedTest):
         self.assertContains(
             response, '<a class="button" href="/">Clear Filter</a>')
 
+    def test_chore_count_rendered(self):
+        chore1 = self.create_chore_in_db()
+        chore2 = self.create_chore_in_db()
+
+        response = self.client.get(reverse("chores:index"))
+        self.assertContains(response, "Pending (2)")
+        self.assertContains(response, "Completed (0)")
+
+        self.create_log_in_db(chore1)
+        response = self.client.get(reverse("chores:index"))
+        self.assertContains(response, "Pending (1)")
+        self.assertContains(response, "Completed (1)")
+
+        self.create_log_in_db(chore2)
+        response = self.client.get(reverse("chores:index"))
+        self.assertContains(response, "Pending (0)")
+        self.assertContains(response, "Completed (2)")
+
 
 class ChoreAddViewTests(AuthenticatedTest):
 

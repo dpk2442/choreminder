@@ -22,7 +22,7 @@
 
 {% for group_name, chores in chore_groups.items %}
 <details{% if forloop.counter == 1 %} open{% endif %}>
-    <summary><h2>{{ group_name }}</h2></summary>
+    <summary><h2>{{ group_name }} ({{ chores | length }})</h2></summary>
     {% if chores %}
     <ul>
         {% for chore in chores %}
