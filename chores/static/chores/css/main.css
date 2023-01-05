@@ -20,6 +20,10 @@
     --chore-card-box-shadow-color: #bbb;
     --chore-card-tag-background-color: #ecf4e1;
     --chore-card-tag-color: #317029;
+    --chore-progress-border-color: #bfbfbf;
+    --chore-progress-state-completed-background-color: #5c8e29;
+    --chore-progress-state-due-background-color: #f0cd75;
+    --chore-progress-state-overdue-background-color: #aa0909;
 }
 
 
@@ -48,6 +52,7 @@
         --chore-card-box-shadow-color: #666666;
         --chore-card-tag-background-color: #526f2a;
         --chore-card-tag-color: #ebf3e2;
+        --chore-progress-border-color: #808080;
     }
 }
 

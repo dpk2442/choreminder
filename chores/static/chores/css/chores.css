@@ -29,16 +29,18 @@ details>ul {
 }
 
 details>ul>li {
-    display: flex;
+    display: grid;
+    grid: "details actions" 1fr "status status" auto / 1fr auto;
+    gap: 1em;
     margin: 1em 0;
-    padding: 1em;
+    padding: 1em 1em 0.5em;
     border-radius: 1em;
     background: var(--chore-card-background-color);
     box-shadow: 0 0 0.1em var(--chore-card-box-shadow-color);
 }
 
-details div.left {
-    flex-grow: 1;
+details div.details {
+    grid-area: details;
 }
 
 details>ul>li h3 {
@@ -65,17 +67,18 @@ details p.footer {
     margin-bottom: 0;
 }
 
-details div.right {
+details div.actions {
+    grid-area: actions;
     display: flex;
     flex-direction: column;
     text-align: center;
 }
 
-details div.right>form {
+details div.actions>form {
     flex-grow: 1;
 }
 
-details div.right>ul {
+details div.actions>ul {
     display: flex;
     list-style: none;
     margin: 0;
@@ -83,6 +86,31 @@ details div.right>ul {
     font-size: 0.8em;
 }
 
-details div.right>ul>li {
+details div.actions>ul>li {
     flex-grow: 1;
+}
+
+details div.status {
+    grid-area: status;
+    display: flex;
+    border-radius: 1em;
+    overflow: hidden;
+    border: 1px solid var(--chore-progress-border-color);
+}
+
+details div.status div.progress {
+    display: inline-block;
+    height: 0.5em;
+}
+
+div.progress.state-completed {
+    background-color: var(--chore-progress-state-completed-background-color)
+}
+
+div.progress.state-due {
+    background-color: var(--chore-progress-state-due-background-color)
+}
+
+div.progress.state-overdue {
+    background-color: var(--chore-progress-state-overdue-background-color)
 }
