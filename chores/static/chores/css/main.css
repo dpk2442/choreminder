@@ -90,6 +90,7 @@ input[type="submit"],
     text-decoration: none;
     cursor: pointer;
     transition: background-color 0.15s ease-in-out;
+    text-align: center;
 }
 
 input[type="submit"]:hover,
@@ -118,6 +119,15 @@ input {
     box-shadow: none;
     max-width: 100%;
     padding: 0.5em;
+}
+
+@media only screen and (max-width: 720px) {
+
+    textarea,
+    select,
+    input {
+        width: 100%;
+    }
 }
 
 
