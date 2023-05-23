@@ -6,12 +6,6 @@ div.controls>form {
     flex-grow: 1;
 }
 
-div.controls>form .button {
-    display: inline-block;
-    box-sizing: border-box;
-    width: 100%;
-}
-
 @media only screen and (max-width: 720px) {
     div.controls {
         flex-direction: column;

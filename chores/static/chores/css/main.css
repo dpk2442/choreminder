@@ -112,8 +112,10 @@ fieldset {
 
 textarea,
 select,
-input {
+input,
+.button {
     display: inline-block;
+    box-sizing: border-box;
     border-radius: 0.5em;
     border: 1px solid var(--form-input-border-color);
     box-shadow: none;
@@ -125,7 +127,8 @@ input {
 
     textarea,
     select,
-    input {
+    input,
+    .button {
         width: 100%;
     }
 }
