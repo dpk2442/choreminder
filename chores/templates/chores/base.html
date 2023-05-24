@@ -7,9 +7,11 @@
     <title>{{ title }} | ChoreMinder</title>
     <link rel="shorcut icon" href="{% static 'chores/img/favicon.png' %}">
     <link rel="stylesheet" href="{% static 'chores/css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'chores/css/chores.css' %}">
+    <script src="{% static 'chores/js/vendor/htmx.min.js' %}" defer></script>
     {% block header %}{% endblock %}
 </head>
-<body>
+<body hx-boost="true">
     <header>
         <a href="{% url "chores:index" %}">
             {% include "chores/img/logo.svg" %}
