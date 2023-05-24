@@ -4,3 +4,4 @@ __pycache__
 # app data
 /data
 /static
+/chores/static/chores/js/vendor

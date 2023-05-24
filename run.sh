@@ -14,5 +14,8 @@ python manage.py migrate
 # Generate secret key file if needed
 python manage.py generate_secret_key
 
+# Download vendor libraries if needed
+python manage.py download_vendor_libs
+
 # Start uwsgi server
 uwsgi uwsgi.ini
