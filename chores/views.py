@@ -1,23 +1,34 @@
 import urllib.parse
 
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest
+from django.http import HttpRequest, QueryDict
 from django.shortcuts import get_object_or_404, redirect, render, resolve_url
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_GET, require_POST
+from django_htmx.middleware import HtmxDetails
 
 from chores import actions, forms, models, queries
+from .type_helpers import UserType
+
+
+def get_htmx_details(request: HttpRequest) -> HtmxDetails:
+    return request.htmx
+
+
+def get_chore_list_chores(user: UserType, filter_form_data: QueryDict):
+    tag_form = forms.TagFilterForm(user, filter_form_data)
+    tag_id = (tag_form.cleaned_data["tag"].id
+              if tag_form.is_valid() and tag_form.cleaned_data["tag"] is not None
+              else None)
+    return actions.get_grouped_sorted_chores(user, tag_id), tag_form, tag_id
 
 
 @login_required
 @require_GET
 def index(request: HttpRequest):
-    tag_form = forms.TagFilterForm(request.user, request.GET)
-    tag_id = (tag_form.cleaned_data["tag"].id
-              if tag_form.is_valid() and tag_form.cleaned_data["tag"] is not None
-              else None)
-    chore_groups = actions.get_grouped_sorted_chores(request.user, tag_id)
+    chore_groups, tag_form, tag_id = get_chore_list_chores(
+        request.user, request.GET)
     return render(request, "chores/index.html", dict(
         title="Chores",
         chore_groups=chore_groups,
@@ -82,6 +93,13 @@ def log_chore(request: HttpRequest, chore_id: int):
     chore = get_object_or_404(models.Chore, pk=chore_id, user=request.user)
     models.Log.objects.create(timestamp=timezone.now(),
                               chore=chore, user=request.user)
+
+    htmx_details = get_htmx_details(request)
+    if htmx_details and not htmx_details.boosted:
+        chore_groups, _, _ = get_chore_list_chores(request.user, request.POST)
+        return render(request, "chores/fragments/chore_list.html", dict(
+            chore_groups=chore_groups,
+        ))
 
     referer_header = request.headers.get("Referer")
     if referer_header is not None:

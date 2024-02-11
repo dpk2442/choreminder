@@ -171,7 +171,7 @@ class ChoreAddViewTests(AuthenticatedTest):
         ))
 
         self.assertContains(response, "This field is required.", 1)
-        self.assertQuerysetEqual(
+        self.assertQuerySetEqual(
             models.Chore.objects.filter(name=chore_name), [])
 
     def test_description_optional(self):
@@ -292,7 +292,7 @@ class ChoreDeleteViewTests(AuthenticatedTest):
         self.assertRedirects(response, reverse("chores:index"))
 
         chores = models.Chore.objects.filter(pk=chore.id)
-        self.assertQuerysetEqual(chores, [])
+        self.assertQuerySetEqual(chores, [])
 
     def test_other_user_delete(self):
         chore = self.create_chore_in_db()
@@ -326,3 +326,10 @@ class ChoreLogViewTests(AuthenticatedTest):
         response = self.client.post(
             reverse("chores:log_chore", args=(chore.id,)), HTTP_REFERER="/?tag=")
         self.assertRedirects(response, reverse("chores:index"))
+
+    def test_htmx_returns_rendered_chore_list(self):
+        chore = self.create_chore_in_db()
+        response = self.client.post(
+            reverse("chores:log_chore", args=(chore.id,)), headers={"HX-Request": "true"})
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, chore.id)

@@ -1,0 +1,57 @@
+{% load chores_filters %}
+
+<div id="chore-list">
+    {% for group_name, chores in chore_groups.items %}
+    <details id="chore-group-{{ group_name }}"{% if forloop.counter == 1 %} open{% endif %}>
+        <summary id="chore-group-summary-{{ group_name }}">
+            <h2>{{ group_name }} ({{ chores | length }})</h2>
+        </summary>
+        {% if chores %}
+        <ul>
+            {% for chore in chores %}
+            <li id="chore-container-{{ chore.id }}">
+                <div class="details">
+                    <h3>{{ chore.name }}</h3>
+                    {% if chore.tags %}
+                    <ul class="tag-list">
+                        {% for tag in chore.tags %}
+                        <li>{{ tag.name }}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    <p>{{ chore.description }}</p>
+                    <p class="footer">
+                        Next Due: {{ chore.status.next_due | default:"Never Completed" }}
+                    </p>
+                </div>
+                <div class="actions">
+                    <form action="{% url "chores:log_chore" chore.id %}" method="POST"
+                            hx-post="{% url "chores:log_chore" chore.id %}"
+                            hx-target="#chore-list"
+                            hx-swap="outerHTML"
+                            hx-include="#tag-form">
+                        {% csrf_token %}
+                        <input type="submit" value="Mark Done">
+                    </form>
+                    <ul>
+                        <li><a href="{% url "chores:edit_chore" chore.id %}">Edit</a></li>
+                        <li><a href="{% url "chores:delete_chore" chore.id %}">Delete</a></li>
+                    </ul>
+                </div>
+                <div class="status" title="Current Status: {{ chore.status.state }}">
+                    {% if chore.status.next_state %}
+                    <div class="progress state-{{ chore.status.next_state | lower }}" style="flex-grow:{{ chore.status.percentage }}"></div>
+                    {% endif %}
+                    <div class="progress state-{{ chore.status.state | lower }}" style="flex-grow:{{ 100 | subtract:chore.status.percentage }}"></div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No chores to display.</p>
+        {% endif %}
+    </details>
+    {% empty %}
+    <p>No chores to display.</p>
+    {% endfor %}
+</div>

@@ -76,7 +76,7 @@ class AwayDateAddViewTests(AuthenticatedTest):
         response = self.client.post(reverse("chores:add_away_date"), dict())
 
         self.assertContains(response, "This field is required.", 3)
-        self.assertQuerysetEqual(models.AwayDate.objects.all(), [])
+        self.assertQuerySetEqual(models.AwayDate.objects.all(), [])
 
 
 class AwayDateEditViewTests(AuthenticatedTest):
@@ -150,7 +150,7 @@ class AwayDateDeleteViewTests(AuthenticatedTest):
         self.assertRedirects(response, reverse("chores:list_away_dates"))
 
         away_dates = models.AwayDate.objects.filter(pk=away_date.id)
-        self.assertQuerysetEqual(away_dates, [])
+        self.assertQuerySetEqual(away_dates, [])
 
     def test_other_user_delete(self):
         away_date = self.create_away_date_in_db()

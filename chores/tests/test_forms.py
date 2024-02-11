@@ -21,7 +21,7 @@ class TestChoreForm(TestCase):
         tag = create_tag(user1)
 
         form = forms.ChoreForm(user1)
-        self.assertQuerysetEqual(form.fields["tags"].queryset, [tag])
+        self.assertQuerySetEqual(form.fields["tags"].queryset, [tag])
 
         form = forms.ChoreForm(user2)
-        self.assertQuerysetEqual(form.fields["tags"].queryset, [])
+        self.assertQuerySetEqual(form.fields["tags"].queryset, [])

@@ -51,7 +51,7 @@ class TagAddViewTests(AuthenticatedTest):
         response = self.client.post(reverse("chores:add_tag"), dict())
 
         self.assertContains(response, "This field is required.", 1)
-        self.assertQuerysetEqual(models.Tag.objects.all(), [])
+        self.assertQuerySetEqual(models.Tag.objects.all(), [])
 
 
 class TagEditViewTests(AuthenticatedTest):
@@ -120,7 +120,7 @@ class TagDeleteViewTests(AuthenticatedTest):
         self.assertRedirects(response, reverse("chores:list_tags"))
 
         tags = models.Tag.objects.filter(pk=tag.id)
-        self.assertQuerysetEqual(tags, [])
+        self.assertQuerySetEqual(tags, [])
 
     def test_other_user_delete(self):
         tag = self.create_tag_in_db()
