@@ -27,8 +27,5 @@ COPY . .
 # Copy virtual env
 COPY --from=python-build /app/.venv ./.venv
 
-# Collect static files
-RUN ./.venv/bin/python manage.py collectstatic
-
 # Run start script
 CMD ["./run.sh"]

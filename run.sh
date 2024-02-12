@@ -17,5 +17,8 @@ python manage.py generate_secret_key
 # Download vendor libraries if needed
 python manage.py download_vendor_libs
 
+# Collect static files
+python manage.py collectstatic
+
 # Start uwsgi server
 uwsgi uwsgi.ini
